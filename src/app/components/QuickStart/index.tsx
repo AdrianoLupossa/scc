@@ -37,7 +37,7 @@ const Curriculum = styled(Image)(({ theme }) => ({
 }));
 
 export default function QuickStart() {
-  const [translate, setTranslate] = useState("-80%");
+  const [translate, setTranslate] = useState("-100%");
   const [modelToShow, setModelToShow] = useState(5);
 
   // Responsive Web Design - Conditional values
@@ -59,8 +59,8 @@ export default function QuickStart() {
             left: 0,
             padding: 5,
             width: "100%",
-            height: 10,
-            transition: "transform ease-in 0.1s",
+            height: 800,
+            transition: "transform ease-in",
             transform: `translateY(${translate})`,
             zIndex: -1,
           },
@@ -89,7 +89,7 @@ export default function QuickStart() {
                 setTranslate("0");
                 setModelToShow(8);
               } else {
-                setTranslate("80%");
+                setTranslate("-100%");
                 setModelToShow(5);
               }
             }}
