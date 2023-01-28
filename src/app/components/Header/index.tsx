@@ -1,21 +1,33 @@
 import * as React from "react";
-
 import { styled, alpha } from "@mui/material/styles";
+import Image from "next/image";
 
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+// import AppBar from "@mui/material/AppBar";
+// import Box from "@mui/material/Box";
+// import Toolbar from "@mui/material/Toolbar";
+// import Typography from "@mui/material/Typography";
+// import IconButton from "@mui/material/IconButton";
+// import Menu from "@mui/material/Menu";
+// import MenuItem from "@mui/material/MenuItem";
 // import Switch from "@mui/material/Switch";
 // import FormControlLabel from "@mui/material/FormControlLabel";
 // import FormGroup from "@mui/material/FormGroup";
-import InputBase from "@mui/material/InputBase";
+// import InputBase from "@mui/material/InputBase";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import {
+  Divider,
+  ListItem,
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  InputBase,
+} from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -141,6 +153,8 @@ export default function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
+                <ListItem>João Paulo</ListItem>
+                <Divider />
                 <MenuItem onClick={handleClose}>Perfil</MenuItem>
                 <MenuItem onClick={handleClose}>Minha Conta</MenuItem>
               </Menu>
