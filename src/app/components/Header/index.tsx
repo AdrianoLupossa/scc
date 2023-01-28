@@ -1,14 +1,6 @@
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
-import Image from "next/image";
 
-// import AppBar from "@mui/material/AppBar";
-// import Box from "@mui/material/Box";
-// import Toolbar from "@mui/material/Toolbar";
-// import Typography from "@mui/material/Typography";
-// import IconButton from "@mui/material/IconButton";
-// import Menu from "@mui/material/Menu";
-// import MenuItem from "@mui/material/MenuItem";
 // import Switch from "@mui/material/Switch";
 // import FormControlLabel from "@mui/material/FormControlLabel";
 // import FormGroup from "@mui/material/FormGroup";
@@ -28,6 +20,8 @@ import {
   MenuItem,
   InputBase,
 } from "@mui/material";
+
+import { roboto } from "@/app/page";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -153,7 +147,7 @@ export default function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <ListItem>João Paulo</ListItem>
+                <ListItem className={roboto.className}>João Paulo</ListItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>Perfil</MenuItem>
                 <MenuItem onClick={handleClose}>Minha Conta</MenuItem>
