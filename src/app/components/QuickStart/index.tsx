@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Image from "next/image";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -5,6 +6,7 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 type curriculumModelType = Array<{
   src: string;
@@ -12,6 +14,11 @@ type curriculumModelType = Array<{
 }>;
 
 const curriculumModels: curriculumModelType = [
+  { src: "coral.png", name: "Coral" },
+  { src: "escritor-moderno.png", name: "Escritor moderno" },
+  { src: "serif.png", name: "Serif" },
+  { src: "suico.png", name: "Suiço" },
+  { src: "verde-hortela.png", name: "Verde hortelã" },
   { src: "coral.png", name: "Coral" },
   { src: "escritor-moderno.png", name: "Escritor moderno" },
   { src: "serif.png", name: "Serif" },
@@ -30,6 +37,13 @@ const Curriculum = styled(Image)(({ theme }) => ({
 }));
 
 export default function QuickStart() {
+  const [translate, setTranslate] = useState("-80%");
+  const [modelToShow, setModelToShow] = useState(5);
+
+  // Responsive Web Design - Conditional values
+  //   const theme = useTheme();
+  //   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <section>
       <Box
@@ -37,6 +51,20 @@ export default function QuickStart() {
         padding={5}
         paddingX={20}
         minHeight={200}
+        sx={{
+          ":after": {
+            content: '""',
+            bgcolor: "#eee",
+            position: "absolute",
+            left: 0,
+            padding: 5,
+            width: "100%",
+            height: 10,
+            transition: "transform ease-in 0.1s",
+            transform: `translateY(${translate})`,
+            zIndex: -1,
+          },
+        }}
         className="models"
         width="100%"
       >
@@ -46,6 +74,7 @@ export default function QuickStart() {
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
+          overflow="hidden"
           width="100%"
           flexGrow={1}
           paddingX={10}
@@ -55,6 +84,15 @@ export default function QuickStart() {
           <Button
             variant="text"
             endIcon={<UnfoldMoreIcon />}
+            onClick={() => {
+              if (modelToShow === 5) {
+                setTranslate("0");
+                setModelToShow(8);
+              } else {
+                setTranslate("80%");
+                setModelToShow(5);
+              }
+            }}
             sx={{
               textTransform: "initial",
               fontSize: 15,
@@ -67,26 +105,32 @@ export default function QuickStart() {
         </Box>
         <Box
           className="models"
-          gap={5}
+          gap={6}
           width="100%"
           display="flex"
-          justifyContent="space-between"
+          flexWrap="wrap"
           paddingX={10}
         >
-          {curriculumModels.map((model, index: number) => (
-            <Box className={`model-${index}`} key={model.name} padding="0">
-              <Curriculum
-                alt={model.name}
-                src={`/assets/curriculum/${model.src}`}
-                width={118}
-                height={150}
-              />
-              <Box display="flex" flexDirection="column">
-                <Typography>Curriculo</Typography>
-                <Typography variant="caption">{model.name}</Typography>
+          {curriculumModels
+            .slice(0, modelToShow)
+            .map((model, index: number) => (
+              <Box
+                className={`model-${index}`}
+                key={`${model.name}-${index}`}
+                padding="0"
+              >
+                <Curriculum
+                  alt={model.name}
+                  src={`/assets/curriculum/${model.src}`}
+                  width={118}
+                  height={150}
+                />
+                <Box display="flex" flexDirection="column">
+                  <Typography>Curriculo</Typography>
+                  <Typography variant="caption">{model.name}</Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
         </Box>
       </Box>
     </section>
