@@ -116,7 +116,7 @@ export default function Header() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Pesquisar currículos…"
+              placeholder="Pesquisar..."
               inputProps={{ "aria-label": "pesquisa" }}
             />
           </Search>
