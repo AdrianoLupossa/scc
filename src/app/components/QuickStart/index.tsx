@@ -51,20 +51,20 @@ export default function QuickStart() {
         padding={5}
         paddingX={20}
         minHeight={200}
-        sx={{
-          ":after": {
-            content: '""',
-            bgcolor: "#eee",
-            position: "absolute",
-            left: 0,
-            padding: 5,
-            width: "100%",
-            height: 800,
-            transition: "transform ease-in",
-            transform: `translateY(${translate})`,
-            zIndex: -1,
-          },
-        }}
+        // sx={{
+        //   ":after": {
+        //     content: '""',
+        //     bgcolor: "#eee",
+        //     position: "absolute",
+        //     left: 0,
+        //     padding: 5,
+        //     width: "100%",
+        //     height: 800,
+        //     transition: "transform ease-in",
+        //     transform: `translateY(${translate})`,
+        //     zIndex: -1,
+        //   },
+        // }}
         className="models"
         width="100%"
       >
