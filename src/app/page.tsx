@@ -7,7 +7,7 @@ import { Box, Typography, IconButton, Tooltip, Skeleton } from "@mui/material";
 import QuickStart from "./components/QuickStart";
 import Header from "./components/Header";
 
-export const roboto = Roboto({
+const roboto = Roboto({
   weight: ["400", "700"],
   style: ["normal", "italic"],
   subsets: ["latin"],

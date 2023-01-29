@@ -21,7 +21,13 @@ import {
   InputBase,
 } from "@mui/material";
 
-import { roboto } from "@/app/page";
+import { Roboto } from "@next/font/google";
+
+const roboto = Roboto({
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+});
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
