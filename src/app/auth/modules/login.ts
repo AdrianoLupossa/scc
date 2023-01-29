@@ -30,15 +30,7 @@ export default async function login(
       // Signed in
       const user = userCredential.user;
 
-      // const queryUser = query(
-      //   collection(db, "users"),
-      //   where("email", "==", email),
-      // )
-
       const docRef = doc(db, "users", user.uid);
-
-      // const querySnapshot = (await getDocs(queryUser));
-      // const userData = querySnapshot.docs[0].data();
 
       const userSnap = await getDoc(docRef);
 

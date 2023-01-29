@@ -5,7 +5,7 @@ import { auth, db } from "@/database/config";
 import { MyUser } from "../store";
 
 import { z } from "zod";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 const registerSchema = z.object({
   fullName: z.string().trim().min(1),
@@ -30,7 +30,8 @@ export default async function register(
       // Signed in
       const user = userCredential.user;
       setUserData({ uid: user.uid, fullName, email, phoneNumber });
-      await addDoc(collection(db, "users"), {
+
+      await setDoc(doc(db, "users", user.uid), {
         fullName,
         uid: user.uid,
         email: user.email,
