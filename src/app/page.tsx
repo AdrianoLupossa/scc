@@ -1,22 +1,16 @@
 "use client";
 // import Image from "next/image";
-import { Roboto } from "@next/font/google";
 
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { Box, Typography, IconButton, Tooltip, Skeleton } from "@mui/material";
 import QuickStart from "./components/QuickStart";
-import Header from "./components/Header";
 
-const roboto = Roboto({
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-});
+import Register from "./auth/modules/register";
+import { useEffect } from "react";
 
 export default function Home() {
   return (
-    <main className={roboto.className}>
-      <Header />
+    <main>
       <QuickStart />
       <Box className="recent-documents" paddingTop={3} paddingX={22}>
         <Box

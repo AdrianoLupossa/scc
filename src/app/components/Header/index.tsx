@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 
@@ -20,14 +22,6 @@ import {
   MenuItem,
   InputBase,
 } from "@mui/material";
-
-import { Roboto } from "@next/font/google";
-
-const roboto = Roboto({
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-});
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -153,7 +147,7 @@ export default function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <ListItem className={roboto.className}>João Paulo</ListItem>
+                <ListItem>João Paulo</ListItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>Perfil</MenuItem>
                 <MenuItem onClick={handleClose}>Minha Conta</MenuItem>
