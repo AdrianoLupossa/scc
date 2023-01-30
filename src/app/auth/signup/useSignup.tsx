@@ -15,27 +15,27 @@ const useSignup = () => {
   const phoneNumber = React.useRef<HTMLInputElement>();
   const password = React.useRef<HTMLInputElement>();
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     setFormSubmited(true);
 
-    register(
-      fullName.current!.value,
-      email.current!.value,
-      phoneNumber.current!.value,
-      password.current!.value,
-      setUser
-    )
-      .then(() => {
-        router.push("/");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(
-          `Something went wrong registering user -> ${errorCode} with ${errorMessage}`
-        );
-        throw Error(`Something went wrong -> ${errorMessage}`);
-      });
+    try {
+      await register(
+        fullName.current!.value,
+        email.current!.value,
+        phoneNumber.current!.value,
+        password.current!.value,
+        setUser
+      );
+
+      router.push("/");
+    } catch (error: any) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      setFormSubmited(false);
+      console.error(
+        `Something went wrong registering user -> ${errorCode} with ${errorMessage}`
+      );
+    }
   };
 
   return {

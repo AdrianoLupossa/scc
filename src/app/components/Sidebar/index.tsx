@@ -12,6 +12,8 @@ import ListItemText from "@mui/material/ListItemText";
 import ExitToApp from "@mui/icons-material/ExitToApp";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import FileCopy from "@mui/icons-material/FileCopy";
+import logout from "@/app/auth/modules/logout";
+import useAuthStore from "@/app/auth/store";
 
 export default function Sidebar({
   openDrawer,
@@ -20,6 +22,9 @@ export default function Sidebar({
   openDrawer: boolean;
   setOpenDrawer: (openDrawer: boolean) => void;
 }) {
+  const { setUser } = useAuthStore();
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
@@ -33,7 +38,7 @@ export default function Sidebar({
     >
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton disabled={isLoading}>
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
@@ -42,7 +47,7 @@ export default function Sidebar({
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton disabled={isLoading}>
             <ListItemIcon>
               <FileCopy />
             </ListItemIcon>
@@ -53,27 +58,22 @@ export default function Sidebar({
         <Divider />
 
         <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemText primary="Terminar sessão" />
+          <ListItemButton
+            disabled={isLoading}
+            onClick={() => {
+              logout(setUser);
+              setIsLoading(true);
+            }}
+          >
+            <ListItemText
+              primary={isLoading ? "Saindo..." : "Terminar sessão"}
+            />
             <ListItemIcon>
               <ExitToApp />
             </ListItemIcon>
           </ListItemButton>
         </ListItem>
       </List>
-
-      {/* <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List> */}
     </Box>
   );
 
