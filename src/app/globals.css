@@ -35,3 +35,14 @@ a {
     color-scheme: dark;
   }
 }
+
+@media print {
+  header,
+  button,
+  input,
+  div.MuiToolbar-root,
+  .action-head,
+  h1 {
+    display: none !important;
+  }
+}

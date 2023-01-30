@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -11,19 +12,28 @@ import { useMediaQuery, useTheme } from "@mui/material";
 type curriculumModelType = Array<{
   src: string;
   name: string;
+  href: string;
 }>;
 
 const curriculumModels: curriculumModelType = [
-  { src: "coral.png", name: "Coral" },
-  { src: "escritor-moderno.png", name: "Escritor moderno" },
-  { src: "serif.png", name: "Serif" },
-  { src: "suico.png", name: "Suiço" },
-  { src: "verde-hortela.png", name: "Verde hortelã" },
-  { src: "coral.png", name: "Coral" },
-  { src: "escritor-moderno.png", name: "Escritor moderno" },
-  { src: "serif.png", name: "Serif" },
-  { src: "suico.png", name: "Suiço" },
-  { src: "verde-hortela.png", name: "Verde hortelã" },
+  { src: "coral.png", name: "Coral", href: "/curriculo/1" },
+  {
+    src: "escritor-moderno.png",
+    name: "Escritor moderno",
+    href: "/curriculo/2",
+  },
+  { src: "serif.png", name: "Serif", href: "/curriculo/3" },
+  { src: "suico.png", name: "Suiço", href: "/curriculo/4" },
+  { src: "verde-hortela.png", name: "Verde hortelã", href: "/curriculo/5" },
+  { src: "coral.png", name: "Coral", href: "/curriculo/6" },
+  {
+    src: "escritor-moderno.png",
+    name: "Escritor moderno",
+    href: "/curriculo/7",
+  },
+  { src: "serif.png", name: "Serif", href: "/curriculo/8" },
+  { src: "suico.png", name: "Suiço", href: "/curriculo/9" },
+  { src: "verde-hortela.png", name: "Verde hortelã", href: "/curriculo/10" },
 ];
 
 // border-[1px] border-solid rounded-sm hover:border-blue-500"
@@ -119,12 +129,14 @@ export default function QuickStart() {
                 key={`${model.name}-${index}`}
                 padding="0"
               >
-                <Curriculum
-                  alt={model.name}
-                  src={`/assets/curriculum/${model.src}`}
-                  width={118}
-                  height={150}
-                />
+                <Link href={model.href}>
+                  <Curriculum
+                    alt={model.name}
+                    src={`/assets/curriculum/${model.src}`}
+                    width={118}
+                    height={150}
+                  />
+                </Link>
                 <Box display="flex" flexDirection="column">
                   <Typography>Curriculo</Typography>
                   <Typography variant="caption">{model.name}</Typography>
