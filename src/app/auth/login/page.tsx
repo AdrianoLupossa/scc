@@ -14,6 +14,8 @@ import {
 
 import useLogin from "./useLogin";
 
+import onUserStateChange from "../modules/auth";
+
 const LoginPage: React.FC = () => {
   const { handleLogin, email, password, formSubmited } = useLogin();
 

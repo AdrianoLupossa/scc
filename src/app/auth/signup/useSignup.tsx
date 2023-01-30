@@ -28,8 +28,13 @@ const useSignup = () => {
       .then(() => {
         router.push("/");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(
+          `Something went wrong registering user -> ${errorCode} with ${errorMessage}`
+        );
+        throw Error(`Something went wrong -> ${errorMessage}`);
       });
   };
 

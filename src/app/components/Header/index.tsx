@@ -2,6 +2,9 @@
 
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
+import useAuthStore from "@/app/auth/store";
+import { useRouter } from "next/navigation";
+import { links } from "@/app/data/links";
 
 // import Switch from "@mui/material/Switch";
 // import FormControlLabel from "@mui/material/FormControlLabel";
@@ -22,6 +25,10 @@ import {
   MenuItem,
   InputBase,
 } from "@mui/material";
+
+import Sidebar from "../Sidebar";
+import logout from "@/app/auth/modules/logout";
+import SpinLoad from "../SpinLoad";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,12 +71,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Header() {
-  const [auth, setAuth] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { user, setUser } = useAuthStore();
+  const { push } = useRouter();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
+  const [openDrawer, setOpenDrawer] = React.useState(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -81,18 +88,6 @@ export default function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? "Logout" : "Login"}
-        />
-      </FormGroup> */}
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -100,10 +95,12 @@ export default function Header() {
             edge="start"
             color="inherit"
             aria-label="menu"
+            onClick={() => setOpenDrawer(true)}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
+          <Sidebar openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
           <Typography
             variant="h6"
             component="div"
@@ -120,40 +117,59 @@ export default function Header() {
               inputProps={{ "aria-label": "pesquisa" }}
             />
           </Search>
-          {auth && (
-            <div>
-              <IconButton
-                size="large"
-                aria-label="Conta do usuário logado"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <ListItem>João Paulo</ListItem>
-                <Divider />
-                <MenuItem onClick={handleClose}>Perfil</MenuItem>
-                <MenuItem onClick={handleClose}>Minha Conta</MenuItem>
-              </Menu>
-            </div>
-          )}
+          <div>
+            <IconButton
+              size="large"
+              aria-label="Conta do usuário logado"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <ListItem>{`Olá, ${user?.fullName.split(" ")[0]}`}</ListItem>
+              <Divider />
+              <MenuItem onClick={handleClose}>Perfil</MenuItem>
+              {user?.uid ? (
+                <MenuItem
+                  onClick={() => {
+                    logout(setUser);
+                    setIsLoading(true);
+                  }}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <SpinLoad size={20} fallback="Saindo..." />
+                  ) : (
+                    links.logout.title
+                  )}
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  disabled={isLoading}
+                  onClick={() => push(links.login.href)}
+                >
+                  {links.login.title}
+                </MenuItem>
+              )}
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
     </Box>

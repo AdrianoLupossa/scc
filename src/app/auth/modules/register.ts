@@ -25,26 +25,18 @@ export default async function register(
 ) {
   registerSchema.parse({ fullName, email, phoneNumber, password });
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(async (userCredential: UserCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      setUserData({ uid: user.uid, fullName, email, phoneNumber });
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+  const user = userCredential.user;
+  setUserData({ uid: user.uid, fullName, email, phoneNumber });
 
-      await setDoc(doc(db, "users", user.uid), {
-        fullName,
-        uid: user.uid,
-        email: user.email,
-        phoneNumber,
-      });
-
-      return 200;
-    })
-    .catch((error: any) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error(
-        `Something went wrong registering user -> ${errorCode} with ${errorMessage}`
-      );
-    });
+  await setDoc(doc(db, "users", user.uid), {
+    fullName,
+    uid: user.uid,
+    email: user.email,
+    phoneNumber,
+  });
 }

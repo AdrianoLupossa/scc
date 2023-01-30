@@ -25,26 +25,20 @@ export default async function login(
 ) {
   signinSchema.parse({ email, password });
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(async (userCredential) => {
-      // Signed in
-      const user = userCredential.user;
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
 
-      const docRef = doc(db, "users", user.uid);
+  if (userCredential) {
+    const user = userCredential.user;
+    const docRef = doc(db, "users", user.uid);
 
-      const userSnap = await getDoc(docRef);
+    const userSnap = await getDoc(docRef);
 
-      const userData = userSnap.data() as MyUser;
+    const userData = userSnap.data() as MyUser;
 
-      setUser({ ...userData });
-
-      return 200;
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error(
-        `Something went wrong log in user -> ${errorCode} with ${errorMessage}`
-      );
-    });
+    setUser({ ...userData });
+  }
 }

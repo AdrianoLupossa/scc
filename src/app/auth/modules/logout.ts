@@ -1,7 +1,8 @@
 import { auth } from "@/database/config";
-import { signOut, User } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { MyUser } from "@/app/auth/store";
 
-export const logout = async (setUser: (user?: User) => void) => {
+export const logout = async (setUser: (user?: MyUser) => void) => {
   signOut(auth)
     .then(() => {
       setUser(undefined);

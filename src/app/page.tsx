@@ -1,12 +1,9 @@
 "use client";
-// import Image from "next/image";
 
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { Box, Typography, IconButton, Tooltip, Skeleton } from "@mui/material";
-import QuickStart from "./components/QuickStart";
 
-import Register from "./auth/modules/register";
-import { useEffect } from "react";
+import QuickStart from "./components/QuickStart";
 
 export default function Home() {
   return (
