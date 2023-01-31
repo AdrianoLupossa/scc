@@ -19,8 +19,11 @@ const LoginPage: React.FC = () => {
 
   return (
     <Container
-      component="section"
-      style={{ paddingTop: 10, paddingBottom: 50 }}
+      component={Box}
+      // style={{ paddingTop: 10, paddingBottom: 50 }}
+      paddingTop={10}
+      paddingBottom={50}
+      height="100vh"
     >
       <Box
         width={400}
