@@ -14,13 +14,16 @@ declare global {
 
 const useFabric = ({ canvasEl }: Props) => {
   const [canvas, setCanvas] = React.useState<fabric.Canvas | null>(null);
+  const [fontSize, setFontSize] = React.useState(12);
+  const [color, setColor] = React.useState("#000000");
+  const [fontFamily, setFontFamily] = React.useState("helvetica");
 
   useEffect(() => {
     if (!canvasEl.current) return;
     setCanvas(
       new window.fabric.Canvas(canvasEl.current, {
-        width: 595,
-        height: 842,
+        width: 794,
+        height: 1123.33,
         selection: true,
       })
     );
@@ -32,10 +35,10 @@ const useFabric = ({ canvasEl }: Props) => {
     const text = new window.fabric.Textbox("Hello world", {
       left: 100,
       top: 100,
-      fontFamily: "helvetica",
+      fontFamily,
       angle: 0,
-      fill: "#000000",
-      fontSize: 20,
+      fill: color,
+      fontSize,
       selectable: true,
     });
 
@@ -45,6 +48,12 @@ const useFabric = ({ canvasEl }: Props) => {
   return {
     canvas,
     addText,
+    fontFamily,
+    setFontFamily,
+    fontSize,
+    setFontSize,
+    color,
+    setColor
   };
 };
 
