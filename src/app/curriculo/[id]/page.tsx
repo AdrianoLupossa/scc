@@ -22,6 +22,8 @@ import TextDecreaseIcon from "@mui/icons-material/TextDecrease";
 import TextIncreaseIcon from "@mui/icons-material/TextIncrease";
 
 import SaveIcon from "@mui/icons-material/Save";
+import useFabric from "./useFabric";
+import Script from "next/script";
 
 const Paragraph = styled(Typography)(({ theme }) => ({
   cursor: "move",
@@ -34,20 +36,24 @@ const Paragraph = styled(Typography)(({ theme }) => ({
 }));
 
 export default function CurriculoPage() {
-  const [editEl, setEditEl] = React.useState({});
+  // const [editEl, setEditEl] = React.useState({});
+
+  const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
   const { back } = useRouter();
 
+  const { canvas, addText } = useFabric({ canvasEl });
+
   return (
-    <Container maxWidth="md" component="section">
+    <Container maxWidth='md' component='section'>
       <Box
-        className="action-head"
-        display="flex"
-        justifyContent="space-between"
+        className='action-head'
+        display='flex'
+        justifyContent='space-between'
         my={4}
       >
-        <Box display="flex" alignItems="center">
-          <Button variant="text" onClick={() => back()}>
+        <Box display='flex' alignItems='center'>
+          <Button variant='text' onClick={() => back()}>
             <ArrowBack /> Curriculo Coral
           </Button>
         </Box>
@@ -55,22 +61,22 @@ export default function CurriculoPage() {
         <Box>
           <Tooltip
             sx={{ fontSize: "1.2rem" }}
-            title="Baixar curriculo (PDF)"
+            title='Baixar curriculo (PDF)'
             arrow
           >
             <IconButton
               onClick={() => window.print()}
-              aria-label="Baixar curriculo em PDF"
+              aria-label='Baixar curriculo em PDF'
             >
               <Download />
             </IconButton>
           </Tooltip>
           <Tooltip
             sx={{ fontSize: "1.2rem" }}
-            title="Ver todos os meus currículos"
+            title='Ver todos os meus currículos'
             arrow
           >
-            <IconButton aria-label="selector de arquivos">
+            <IconButton aria-label='selector de arquivos'>
               <FolderOpenIcon />
             </IconButton>
           </Tooltip>
@@ -82,48 +88,49 @@ export default function CurriculoPage() {
 
       <Draggable>
         <Box
-          boxShadow="1px 2px 20px #ddd"
-          bgcolor="white"
+          boxShadow='1px 2px 20px #ddd'
+          bgcolor='white'
           p={3}
           borderRadius={2}
           left={25}
-          position="absolute"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          alignContent="center"
-          flexDirection="column"
+          position='absolute'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          alignContent='center'
+          flexDirection='column'
           sx={{ cursor: "move" }}
         >
           <Box>
             <Tooltip
-              placement="top"
+              placement='top'
               sx={{ fontSize: "1.2rem" }}
-              title="Negrito"
+              title='Negrito'
               arrow
+              onClick={addText}
             >
-              <IconButton size="small">
+              <IconButton size='small'>
                 <FormatBoldIcon />
               </IconButton>
             </Tooltip>
             <Tooltip
-              placement="top"
+              placement='top'
               sx={{ fontSize: "1.2rem" }}
-              title="Itálico"
+              title='Itálico'
               arrow
             >
-              <IconButton size="small">
+              <IconButton size='small'>
                 <FormatItalicIcon />
               </IconButton>
             </Tooltip>
 
             <Tooltip
-              placement="top"
+              placement='top'
               sx={{ fontSize: "1.2rem" }}
-              title="Sublinhado"
+              title='Sublinhado'
               arrow
             >
-              <IconButton size="small">
+              <IconButton size='small'>
                 <FormatUnderlinedIcon />
               </IconButton>
             </Tooltip>
@@ -131,51 +138,51 @@ export default function CurriculoPage() {
 
           <Box>
             <Tooltip
-              placement="left"
+              placement='left'
               sx={{ fontSize: "1.2rem" }}
-              title="Alinha á esquerda"
+              title='Alinha á esquerda'
               arrow
             >
-              <IconButton size="small">
+              <IconButton size='small'>
                 <FormatAlignLeftIcon />
               </IconButton>
             </Tooltip>
 
             <Tooltip
-              placement="bottom-end"
+              placement='bottom-end'
               sx={{ fontSize: "1.2rem" }}
-              title="Alinha ao centro"
+              title='Alinha ao centro'
               arrow
             >
-              <IconButton size="small">
+              <IconButton size='small'>
                 <FormatAlignCenterIcon />
               </IconButton>
             </Tooltip>
 
             <Tooltip
-              placement="right"
+              placement='right'
               sx={{ fontSize: "1.2rem" }}
-              title="Alinha á direita"
+              title='Alinha á direita'
               arrow
             >
-              <IconButton size="small">
+              <IconButton size='small'>
                 <FormatAlignRightIcon />
               </IconButton>
             </Tooltip>
           </Box>
 
           <Box>
-            <Tooltip sx={{ fontSize: "1.2rem" }} title="Título" arrow>
-              <IconButton size="small">
+            <Tooltip sx={{ fontSize: "1.2rem" }} title='Título' arrow>
+              <IconButton size='small'>
                 <TitleIcon />
               </IconButton>
             </Tooltip>
 
-            <IconButton size="small">
+            <IconButton size='small'>
               <TextDecreaseIcon />
             </IconButton>
 
-            <IconButton size="small">
+            <IconButton size='small'>
               <TextIncreaseIcon />
             </IconButton>
           </Box>
@@ -183,49 +190,15 @@ export default function CurriculoPage() {
       </Draggable>
 
       <Box gap={3} mt={3} pb={10}>
-        <Box
-          border="1px solid #eee"
-          boxShadow="0 1px 3px 1px rgb(60 64 67 / 15%)"
-          width="100%"
-          height={1223.33}
-          padding={15}
-          sx={{
-            cursor: "text",
+        <canvas
+          ref={canvasEl}
+          style={{
+            border: "1px solid #eee",
+            boxShadow: "0 1px 3px 1px rgb(60 64 67 / 15%)",
+            width: "100%",
+            height: 1223,
           }}
-        >
-          <Paragraph
-            tabIndex={0}
-            onFocus={() =>
-              setEditEl({
-                cursor: "move",
-                border: "1px solid yellow",
-              })
-            }
-            onBlur={() =>
-              setEditEl({
-                cursor: "default",
-                border: "none",
-              })
-            }
-            sx={editEl}
-            onDoubleClick={() =>
-              setEditEl({
-                cursor: "default",
-                border: "1px solid yellow",
-                "-mozAppearance:": "textfield",
-                "-webkitAppearance": "textfield",
-                backgroundColor: "white",
-                boxShadow: "1px 1px 1px 0 lightgray inset",
-                font: "-moz-field",
-                marginTop: "5px",
-                padding: "2px 3px",
-                width: "398px",
-              })
-            }
-          >
-            Curriculo
-          </Paragraph>
-        </Box>
+        ></canvas>
       </Box>
     </Container>
   );
