@@ -59,6 +59,7 @@ export default function RootLayout({
     })();
 
     return () => unsubscribe?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -80,7 +81,6 @@ export default function RootLayout({
           // integrity='sha512-CeIsOAsgJnmevfCi2C7Zsyy6bQKi43utIjdA87Q0ZY84oDqnI0uwfM9+bKiIkI75lUeI00WG/+uJzOmuHlesMA=='
           // crossOrigin='anonymous'
           // referrerPolicy='no-referrer'
-          strategy="beforeInteractive"
         ></Script>
       </body>
     </html>
