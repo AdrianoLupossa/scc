@@ -1,4 +1,3 @@
-import { useTheme } from "@mui/material/styles";
 import React, { useEffect } from "react";
 // import type { fabric } from "fabric";
 
@@ -15,27 +14,12 @@ declare global {
 
 const useFabric = ({ canvasEl }: Props) => {
   const [canvas, setCanvas] = React.useState<fabric.Canvas | null>(null);
-  const [fontSize, setFontSize] = React.useState(20);
-  const [color, setColor] = React.useState("#000000");
-  const [fontFamily, setFontFamily] = React.useState("helvetica");
-  const [isBold, setIsBold] = React.useState(false);
-
-  const theme = useTheme();
-
-  const format = {
-    fontSize,
-    setFontSize,
-    color,
-    setColor,
-    fontFamily,
-    setFontFamily,
-    setIsBold,
-  };
 
   useEffect(() => {
     if (!canvasEl.current) return;
     const canvas = new window.fabric.Canvas(canvasEl.current, {
-      selectionLineWidth: 2,
+      backgroundColor: "#fff",
+      selectionLineWidth: 1,
       width: 794,
       height: 1123.33,
       selection: true,
@@ -43,30 +27,40 @@ const useFabric = ({ canvasEl }: Props) => {
     setCanvas(canvas);
   }, [canvasEl]);
 
-  const addText = () => {
+  const addTitle = () => {
     if (!canvas) return;
 
     const text = new window.fabric.Textbox("Meu Titulo", {
       left: 100,
       top: 100,
-      fontFamily,
-      width: 100,
-      height: 100,
-      fontWeight: isBold ? "bold" : "normal",
-      selectionColor: theme.palette.primary.main,
+      fontFamily: "helvetica",
+      width: 120,
       angle: 0,
-      fill: color,
-      fontSize,
+      fill: "#000000",
+      fontSize: 20,
       selectable: true,
     });
 
     canvas.add(text);
-    canvas.setActiveObject(text);
+    canvas.setActiveObject(text).bringToFront(text);
+  };
+
+  const setTextProperty = (key: string, value: string | number) => {
+    if (!canvas) return;
+    // const text =
+  };
+
+  const makeTextBold = () => {
+    setTextProperty("fontSize", 12);
+  };
+
+  const format = {
+    addTitle,
+    makeTextBold,
   };
 
   return {
     canvas,
-    addText,
     format,
   };
 };

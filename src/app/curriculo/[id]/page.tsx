@@ -43,12 +43,12 @@ export default function CurriculoPage() {
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { addText } = useFabric({ canvasEl });
+  const { format } = useFabric({ canvasEl });
 
-  const handleFormattingButton = (button: string) => {
-    switch (button) {
+  const handleFormattingButton = (option: string) => {
+    switch (option) {
       case "bold":
-        // format.setIsBold(true);
+        format.makeTextBold();
         break;
       case "italic":
         // format.set
@@ -56,8 +56,7 @@ export default function CurriculoPage() {
       case "underlined":
         break;
       case "title":
-        // format.setFontSize(20);
-        addText();
+        format.addTitle();
         break;
       case "font+":
         // format.setFontSize((fontSize) => fontSize + 2);
