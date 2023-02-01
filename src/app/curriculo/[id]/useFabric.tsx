@@ -34,14 +34,13 @@ const useFabric = ({ canvasEl }: Props) => {
 
   useEffect(() => {
     if (!canvasEl.current) return;
-    setCanvas(
-      new window.fabric.Canvas(canvasEl.current, {
-        selectionLineWidth: 2,
-        width: 794,
-        height: 1123.33,
-        selection: true,
-      })
-    );
+    const canvas = new window.fabric.Canvas(canvasEl.current, {
+      selectionLineWidth: 2,
+      width: 794,
+      height: 1123.33,
+      selection: true,
+    });
+    setCanvas(canvas);
   }, [canvasEl]);
 
   const addText = () => {
@@ -55,9 +54,6 @@ const useFabric = ({ canvasEl }: Props) => {
       height: 100,
       fontWeight: isBold ? "bold" : "normal",
       selectionColor: theme.palette.primary.main,
-      onselect: (options: any) => {
-        console.log(options);
-      },
       angle: 0,
       fill: color,
       fontSize,

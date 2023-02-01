@@ -39,38 +39,31 @@ import useFabric from "./useFabric";
 // }));
 
 export default function CurriculoPage() {
-  // const [editEl, setEditEl] = React.useState({});
+  const { back } = useRouter();
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { back } = useRouter();
-
-  const { canvas, addText, format } = useFabric({ canvasEl });
+  const { addText } = useFabric({ canvasEl });
 
   const handleFormattingButton = (button: string) => {
     switch (button) {
       case "bold":
-        format.setIsBold(true);
+        // format.setIsBold(true);
         break;
-
       case "italic":
         // format.set
         break;
-
       case "underlined":
         break;
-
       case "title":
-        format.setFontSize(20);
+        // format.setFontSize(20);
         addText();
         break;
-
       case "font+":
-        format.setFontSize((fontSize) => fontSize + 2);
+        // format.setFontSize((fontSize) => fontSize + 2);
         break;
-
       case "font-":
-        format.setFontSize((fontSize) => fontSize + 1);
+        // format.setFontSize((fontSize) => fontSize + 1);
         break;
     }
   };
@@ -232,11 +225,11 @@ export default function CurriculoPage() {
               <TextDecreaseIcon />
             </IconButton>
 
-            <Typography
+            {/* <Typography
               sx={{ border: "1px solid #ddd", borderRadius: 1, padding: 0.5 }}
             >
               {format.fontSize}
-            </Typography>
+            </Typography> */}
             <IconButton
               size="small"
               onClick={() => handleFormattingButton("font-")}
@@ -249,13 +242,13 @@ export default function CurriculoPage() {
 
       <Box gap={3} mt={3} pb={10}>
         <canvas
-          ref={canvasEl}
           style={{
             border: "1px solid #eee",
             boxShadow: "0 1px 3px 1px rgb(60 64 67 / 15%)",
-            width: 794,
-            height: 1123.33,
           }}
+          ref={canvasEl}
+          width={794}
+          height={1123.33}
         />
       </Box>
     </Container>
