@@ -138,9 +138,13 @@ const useFabric = ({ canvasEl }: Props) => {
       selection: true,
     });
 
+    _canvas?.on("object:selected", (e: any) => {
+      if (!e.target) return;
+      setSelectedObject(e.target);
+    });
+
     _canvas?.on("mouse:down", (e: any) => {
       if (!e.target) return;
-
       setSelectedObject(e.target);
     });
 
@@ -149,29 +153,16 @@ const useFabric = ({ canvasEl }: Props) => {
       setSelectedObject(e.target);
     });
 
+    _canvas.on("before:selection:cleared", () => {
+      setSelectedObject(undefined);
+    });
+
     setCanvas(_canvas);
 
     return () => {
       _canvas.dispose();
     };
   }, [canvasEl]);
-
-  useEffect(() => {
-    if (!canvas) return;
-
-    document.addEventListener("keydown", (event: any) => {
-      if (!canvas.getActiveObject()) return;
-      if (event.key === "Delete" && event.which === 46) {
-        if (!canvas) return;
-
-        canvas.getActiveObjects().forEach((activeObject) => {
-          canvas.remove(activeObject);
-        });
-      } else if (event.keyCode == 90 && event.ctrlKey) {
-        console.log("Control Z");
-      }
-    });
-  }, [canvas]);
 
   const addTitle = () => {
     if (!canvas) return;
@@ -196,7 +187,6 @@ const useFabric = ({ canvasEl }: Props) => {
     setSelectedTextProps({
       ...selectedTextProps,
       fontSize: 20,
-      fontFamily: "helvetica",
     });
   };
 
@@ -214,7 +204,8 @@ const useFabric = ({ canvasEl }: Props) => {
 
   const setTextUnderlined = (text?: fabric.Object) => {
     if (!(text instanceof Fabric.Textbox)) return;
-    text.underline = text.underline ? false : true;
+    // text.underline = text.underline ? false : true;
+    text.set("underline", !text.underline);
     canvas?.renderTop();
     canvas?.renderAll();
   };

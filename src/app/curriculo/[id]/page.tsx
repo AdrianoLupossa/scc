@@ -33,23 +33,27 @@ import { useTheme } from "@mui/material/styles";
 
 // TODO: Add a sidebar with all the actions separated by category (text, image, shape, etc).
 
+const initialSelectionState = {
+  bold: false,
+  italic: false,
+  underline: false,
+  alignLeft: false,
+  alignCenter: false,
+  alignRight: false,
+};
+
 export default function CurriculoPage() {
   const { back } = useRouter();
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { selectedTextProps, textActions, selectedObject } = useFabric({
+  const { canvas, selectedTextProps, textActions, selectedObject } = useFabric({
     canvasEl,
   });
 
-  const [buttonSelected, setButtonSelected] = React.useState({
-    bold: false,
-    italic: false,
-    underline: false,
-    alignLeft: false,
-    alignCenter: false,
-    alignRight: false,
-  });
+  const [buttonSelected, setButtonSelected] = React.useState(
+    initialSelectionState
+  );
 
   const theme = useTheme();
 
@@ -63,6 +67,25 @@ export default function CurriculoPage() {
   //     document.querySelectorAll(".upper-canvas")[1]?.remove();
   //   }
   // }, [canvas]);
+
+  React.useEffect(() => {
+    if (!canvas) return;
+
+    document.addEventListener("keydown", (event: any) => {
+      if (!canvas.getActiveObject()) return;
+      if (event.key === "Delete" && event.which === 46) {
+        if (!canvas) return;
+
+        canvas.getActiveObjects().forEach((activeObject) => {
+          canvas.remove(activeObject);
+        });
+
+        setButtonSelected(initialSelectionState);
+      } else if (event.keyCode == 90 && event.ctrlKey) {
+        console.log("Control Z");
+      }
+    });
+  }, [canvas]);
 
   return (
     <Container maxWidth="md" component="section">
@@ -84,13 +107,15 @@ export default function CurriculoPage() {
             title="Baixar curriculo (PDF)"
             arrow
           >
-            <IconButton
-              onClick={() => window.print()}
-              disabled={!Boolean(selectedObject)}
-              aria-label="Baixar curriculo em PDF"
-            >
-              <Download />
-            </IconButton>
+            <span>
+              <IconButton
+                onClick={() => window.print()}
+                disabled={!Boolean(selectedObject)}
+                aria-label="Baixar curriculo em PDF"
+              >
+                <Download />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip
             sx={{ fontSize: "1.2rem" }}
@@ -227,6 +252,8 @@ export default function CurriculoPage() {
                     setButtonSelected({
                       ...buttonSelected,
                       alignLeft: !buttonSelected.alignLeft,
+                      alignCenter: false,
+                      alignRight: false,
                     });
                   }}
                 >
@@ -255,6 +282,8 @@ export default function CurriculoPage() {
                     setButtonSelected({
                       ...buttonSelected,
                       alignCenter: !buttonSelected.alignCenter,
+                      alignLeft: false,
+                      alignRight: false,
                     });
                   }}
                 >
@@ -283,6 +312,8 @@ export default function CurriculoPage() {
                     setButtonSelected({
                       ...buttonSelected,
                       alignRight: !buttonSelected.alignRight,
+                      alignLeft: false,
+                      alignCenter: false,
                     });
                   }}
                 >
@@ -336,6 +367,7 @@ export default function CurriculoPage() {
                 value={selectedTextProps.fontSize}
               />
             )}
+
             <IconButton
               disabled={!Boolean(selectedObject)}
               size="small"
