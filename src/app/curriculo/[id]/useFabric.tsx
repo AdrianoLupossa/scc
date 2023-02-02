@@ -1,36 +1,48 @@
+import fabric from "fabric/fabric-impl";
 import React, { useEffect } from "react";
-// import type { fabric } from "fabric";
 
 type Props = {
   canvasEl: React.RefObject<HTMLCanvasElement | null>;
 };
 
-declare global {
-  interface Window {
-    fabric: any;
-    // fabric: typeof fabric;
-  }
-}
+let Fabric: typeof fabric;
 
 const useFabric = ({ canvasEl }: Props) => {
-  const [canvas, setCanvas] = React.useState<fabric.Canvas | null>(null);
+  const [canvas, setCanvas] = React.useState<fabric.Canvas | undefined>();
+
+  const [selectedObject, setSelectedObject] = React.useState<
+    fabric.Object | undefined
+  >();
 
   useEffect(() => {
+    Fabric = window.fabric;
     if (!canvasEl.current) return;
-    const canvas = new window.fabric.Canvas(canvasEl.current, {
+
+    const _canvas = new Fabric.Canvas(canvasEl.current, {
       backgroundColor: "#fff",
-      selectionLineWidth: 1,
       width: 794,
       height: 1123.33,
       selection: true,
     });
-    setCanvas(canvas);
-  }, [canvasEl]);
+
+    _canvas?.on("mouse:down", (e) => {
+      if (!e.target) return;
+
+      setSelectedObject(e.target);
+    });
+
+    setCanvas(_canvas);
+
+    return () => {
+      _canvas.dispose();
+      // canvas?.dispose();
+    };
+  }, [canvasEl.current]);
 
   const addTitle = () => {
     if (!canvas) return;
 
-    const text = new window.fabric.Textbox("Meu Titulo", {
+    const text = new Fabric.Textbox("Meu Titulo", {
       left: 100,
       top: 100,
       fontFamily: "helvetica",
@@ -45,23 +57,70 @@ const useFabric = ({ canvasEl }: Props) => {
     canvas.setActiveObject(text).bringToFront(text);
   };
 
-  const setTextProperty = (key: string, value: string | number) => {
-    if (!canvas) return;
-    // const text =
+  const setTextBold = (text?: fabric.Object) => {
+    if (!(text instanceof Fabric.Textbox)) return;
+    text.fontWeight = text.fontWeight === "bold" ? "normal" : "bold";
+    canvas?.renderAll();
   };
 
-  const makeTextBold = () => {
-    setTextProperty("fontSize", 12);
+  const setTextItalic = (text?: fabric.Object) => {
+    if (!(text instanceof Fabric.Textbox)) return;
+    text.fontStyle = text.fontStyle === "italic" ? "normal" : "italic";
+    canvas?.renderAll();
   };
 
-  const format = {
+  const setTextUnderlined = (text?: fabric.Object) => {
+    if (!(text instanceof Fabric.Textbox)) return;
+    text.underline = text.underline ? false : true;
+    canvas?.renderAll();
+  };
+
+  const setTextAlign = ({
+    align,
+    text,
+  }: {
+    text?: fabric.Object;
+    align: "left" | "center" | "right";
+  }) => {
+    if (!(text instanceof Fabric.Textbox)) return;
+    text.textAlign = align;
+
+    canvas?.renderAll();
+  };
+
+  const setTextFontSize = ({
+    action,
+    text,
+  }: {
+    text?: fabric.Object;
+    action: "+" | "-";
+  }) => {
+    if (!(text instanceof Fabric.Textbox)) return;
+    if (!text.fontSize) return;
+
+    if (action === "+") {
+      text.fontSize = text.fontSize + 2;
+    } else {
+      if (text.fontSize <= 2) return;
+      text.fontSize = text.fontSize - 2;
+    }
+
+    canvas?.renderAll();
+  };
+
+  const textActions = {
     addTitle,
-    makeTextBold,
+    setTextBold,
+    setTextAlign,
+    setTextItalic,
+    setTextFontSize,
+    setTextUnderlined,
   };
 
   return {
     canvas,
-    format,
+    textActions,
+    selectedObject,
   };
 };
 
