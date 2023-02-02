@@ -29,6 +29,7 @@ import TextIncreaseIcon from "@mui/icons-material/TextIncrease";
 import SaveIcon from "@mui/icons-material/Save";
 
 import useFabric from "./useFabric";
+import Input from "@mui/material/Input";
 
 // TODO: Add a sidebar with all the actions separated by category (text, image, shape, etc).
 
@@ -37,7 +38,7 @@ export default function CurriculoPage() {
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { canvas, textProps, textActions, selectedObject } = useFabric({
+  const { canvas, selectedTextProps, textActions, selectedObject } = useFabric({
     canvasEl,
   });
 
@@ -69,6 +70,7 @@ export default function CurriculoPage() {
           >
             <IconButton
               onClick={() => window.print()}
+              disabled={!Boolean(selectedObject)}
               aria-label="Baixar curriculo em PDF"
             >
               <Download />
@@ -115,13 +117,15 @@ export default function CurriculoPage() {
               title="Negrito"
               arrow
             >
-              <IconButton
-                size="small"
-                disabled={!Boolean(selectedObject)}
-                onClick={() => textActions.setTextBold(selectedObject)}
-              >
-                <FormatBoldIcon />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={!Boolean(selectedObject)}
+                  onClick={() => textActions.setTextBold(selectedObject)}
+                >
+                  <FormatBoldIcon />
+                </IconButton>
+              </span>
             </Tooltip>
             <Tooltip
               placement="top"
@@ -129,13 +133,15 @@ export default function CurriculoPage() {
               title="Itálico"
               arrow
             >
-              <IconButton
-                size="small"
-                disabled={!Boolean(selectedObject)}
-                onClick={() => textActions.setTextItalic(selectedObject)}
-              >
-                <FormatItalicIcon />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={!Boolean(selectedObject)}
+                  onClick={() => textActions.setTextItalic(selectedObject)}
+                >
+                  <FormatItalicIcon />
+                </IconButton>
+              </span>
             </Tooltip>
 
             <Tooltip
@@ -144,13 +150,15 @@ export default function CurriculoPage() {
               title="Sublinhado"
               arrow
             >
-              <IconButton
-                size="small"
-                disabled={!Boolean(selectedObject)}
-                onClick={() => textActions.setTextUnderlined(selectedObject)}
-              >
-                <FormatUnderlinedIcon />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={!Boolean(selectedObject)}
+                  onClick={() => textActions.setTextUnderlined(selectedObject)}
+                >
+                  <FormatUnderlinedIcon />
+                </IconButton>
+              </span>
             </Tooltip>
           </Box>
 
@@ -161,18 +169,20 @@ export default function CurriculoPage() {
               title="Alinha á esquerda"
               arrow
             >
-              <IconButton
-                size="small"
-                disabled={!Boolean(selectedObject)}
-                onClick={() =>
-                  textActions.setTextAlign({
-                    align: "left",
-                    text: selectedObject,
-                  })
-                }
-              >
-                <FormatAlignLeftIcon />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={!Boolean(selectedObject)}
+                  onClick={() =>
+                    textActions.setTextAlign({
+                      align: "left",
+                      text: selectedObject,
+                    })
+                  }
+                >
+                  <FormatAlignLeftIcon />
+                </IconButton>
+              </span>
             </Tooltip>
 
             <Tooltip
@@ -181,18 +191,20 @@ export default function CurriculoPage() {
               title="Alinha ao centro"
               arrow
             >
-              <IconButton
-                size="small"
-                disabled={!Boolean(selectedObject)}
-                onClick={() =>
-                  textActions.setTextAlign({
-                    align: "center",
-                    text: selectedObject,
-                  })
-                }
-              >
-                <FormatAlignCenterIcon />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={!Boolean(selectedObject)}
+                  onClick={() =>
+                    textActions.setTextAlign({
+                      align: "center",
+                      text: selectedObject,
+                    })
+                  }
+                >
+                  <FormatAlignCenterIcon />
+                </IconButton>
+              </span>
             </Tooltip>
 
             <Tooltip
@@ -201,18 +213,20 @@ export default function CurriculoPage() {
               title="Alinha á direita"
               arrow
             >
-              <IconButton
-                size="small"
-                disabled={!Boolean(selectedObject)}
-                onClick={() =>
-                  textActions.setTextAlign({
-                    align: "right",
-                    text: selectedObject,
-                  })
-                }
-              >
-                <FormatAlignRightIcon />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={!Boolean(selectedObject)}
+                  onClick={() =>
+                    textActions.setTextAlign({
+                      align: "right",
+                      text: selectedObject,
+                    })
+                  }
+                >
+                  <FormatAlignRightIcon />
+                </IconButton>
+              </span>
             </Tooltip>
           </Box>
 
@@ -240,12 +254,25 @@ export default function CurriculoPage() {
               <TextDecreaseIcon />
             </IconButton>
 
-            {textProps && (
-              <Typography
-                sx={{ border: "1px solid #ddd", borderRadius: 1, padding: 0.5 }}
-              >
-                {textProps?.fontSize}
-              </Typography>
+            {selectedTextProps && (
+              <Input
+                sx={{
+                  border: "1px solid #ddd",
+                  borderRadius: 1,
+                  padding: 0,
+                  width: 30,
+                }}
+                inputProps={{
+                  style: {
+                    textAlign: "center",
+                  },
+                }}
+                onFocus={(e: any) => e.target.select}
+                type="text"
+                size="small"
+                readOnly
+                value={selectedTextProps.fontSize}
+              />
             )}
             <IconButton
               disabled={!Boolean(selectedObject)}

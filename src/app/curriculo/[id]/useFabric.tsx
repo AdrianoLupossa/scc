@@ -9,11 +9,12 @@ let Fabric: typeof fabric;
 
 const useFabric = ({ canvasEl }: Props) => {
   const [canvas, setCanvas] = React.useState<fabric.Canvas | undefined>();
-  const [textProps, setTextProps] = React.useState<{
+  const [selectedTextProps, setSelectedTextProps] = React.useState<{
     fontSize?: number;
     underline?: boolean;
     fontStyle?: string;
     fontWeight?: string;
+    fontFamily?: string;
   }>();
 
   const [selectedObject, setSelectedObject] = React.useState<
@@ -47,7 +48,6 @@ const useFabric = ({ canvasEl }: Props) => {
 
     return () => {
       _canvas.dispose();
-      // canvas?.dispose();
     };
   }, [canvasEl]);
 
@@ -70,6 +70,11 @@ const useFabric = ({ canvasEl }: Props) => {
 
     canvas.add(text);
     canvas.setActiveObject(text);
+    setSelectedTextProps({
+      ...selectedTextProps,
+      fontSize: 20,
+      fontFamily: "helvetica",
+    });
   };
 
   const setTextBold = (text?: fabric.Object) => {
@@ -115,15 +120,15 @@ const useFabric = ({ canvasEl }: Props) => {
 
     if (action === "+") {
       text.fontSize = text.fontSize + 2;
-      setTextProps({
-        ...textProps,
+      setSelectedTextProps({
+        ...selectedTextProps,
         fontSize: text.fontSize + 2,
       });
     } else {
       if (text.fontSize <= 2) return;
       text.fontSize = text.fontSize - 2;
-      setTextProps({
-        ...textProps,
+      setSelectedTextProps({
+        ...selectedTextProps,
         fontSize: text.fontSize - 2,
       });
     }
@@ -142,7 +147,7 @@ const useFabric = ({ canvasEl }: Props) => {
 
   return {
     canvas,
-    textProps,
+    selectedTextProps,
     textActions,
     selectedObject,
   };
