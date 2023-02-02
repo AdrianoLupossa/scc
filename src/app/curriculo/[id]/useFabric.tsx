@@ -16,6 +16,7 @@ const useFabric = ({ canvasEl }: Props) => {
 
   useEffect(() => {
     Fabric = window.fabric;
+
     if (!canvasEl.current) return;
 
     const _canvas = new Fabric.Canvas(canvasEl.current, {
@@ -25,7 +26,13 @@ const useFabric = ({ canvasEl }: Props) => {
       selection: true,
     });
 
-    _canvas?.on("mouse:down", (e) => {
+    _canvas?.on("mouse:down", (e: any) => {
+      if (!e.target) return;
+
+      setSelectedObject(e.target);
+    });
+
+    _canvas?.on("object:modified", (e: any) => {
       if (!e.target) return;
 
       setSelectedObject(e.target);
@@ -37,7 +44,7 @@ const useFabric = ({ canvasEl }: Props) => {
       _canvas.dispose();
       // canvas?.dispose();
     };
-  }, [canvasEl.current]);
+  }, [canvasEl]);
 
   const addTitle = () => {
     if (!canvas) return;
@@ -51,10 +58,11 @@ const useFabric = ({ canvasEl }: Props) => {
       fill: "#000000",
       fontSize: 20,
       selectable: true,
+      lockScalingY: true,
     });
 
     canvas.add(text);
-    canvas.setActiveObject(text).bringToFront(text);
+    canvas.setActiveObject(text);
   };
 
   const setTextBold = (text?: fabric.Object) => {

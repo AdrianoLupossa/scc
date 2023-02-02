@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { IconButton, Tooltip, Typography } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 // import { ArrowBack, Download } from "@mui/icons-material";
 import Draggable from "react-draggable";
 
-import { styled } from "@mui/material/styles";
+// import { styled } from "@mui/material/styles";
 
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import Download from "@mui/icons-material/Download";
@@ -36,16 +36,22 @@ export default function CurriculoPage() {
 
   const { textActions, selectedObject } = useFabric({ canvasEl });
 
+  // React.useEffect(() => {
+  //   if (canvas) {
+  //     document.querySelectorAll(".upper-canvas")[1]?.remove();
+  //   }
+  // }, [canvas]);
+
   return (
-    <Container maxWidth='md' component='section'>
+    <Container maxWidth="md" component="section">
       <Box
-        className='action-head'
-        display='flex'
-        justifyContent='space-between'
+        className="action-head"
+        display="flex"
+        justifyContent="space-between"
         my={4}
       >
-        <Box display='flex' alignItems='center'>
-          <Button variant='text' onClick={() => back()}>
+        <Box display="flex" alignItems="center">
+          <Button variant="text" onClick={() => back()}>
             <ArrowBack /> Curriculo Coral
           </Button>
         </Box>
@@ -53,22 +59,22 @@ export default function CurriculoPage() {
         <Box>
           <Tooltip
             sx={{ fontSize: "1.2rem" }}
-            title='Baixar curriculo (PDF)'
+            title="Baixar curriculo (PDF)"
             arrow
           >
             <IconButton
               onClick={() => window.print()}
-              aria-label='Baixar curriculo em PDF'
+              aria-label="Baixar curriculo em PDF"
             >
               <Download />
             </IconButton>
           </Tooltip>
           <Tooltip
             sx={{ fontSize: "1.2rem" }}
-            title='Ver todos os meus currículos'
+            title="Ver todos os meus currículos"
             arrow
           >
-            <IconButton aria-label='selector de arquivos'>
+            <IconButton aria-label="selector de arquivos">
               <FolderOpenIcon />
             </IconButton>
           </Tooltip>
@@ -80,42 +86,42 @@ export default function CurriculoPage() {
 
       <Draggable>
         <Box
-          boxShadow='1px 2px 20px #ddd'
-          bgcolor='white'
+          boxShadow="1px 2px 20px #ddd"
+          bgcolor="white"
           p={3}
           borderRadius={2}
           left={25}
-          position='absolute'
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-          alignContent='center'
-          flexDirection='column'
+          position="absolute"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          alignContent="center"
+          flexDirection="column"
           zIndex={999}
           sx={{ cursor: "move" }}
         >
           <Box>
             <Tooltip
-              placement='top'
+              placement="top"
               sx={{ fontSize: "1.2rem" }}
-              title='Negrito'
+              title="Negrito"
               arrow
             >
               <IconButton
-                size='small'
+                size="small"
                 onClick={() => textActions.setTextBold(selectedObject)}
               >
                 <FormatBoldIcon />
               </IconButton>
             </Tooltip>
             <Tooltip
-              placement='top'
+              placement="top"
               sx={{ fontSize: "1.2rem" }}
-              title='Itálico'
+              title="Itálico"
               arrow
             >
               <IconButton
-                size='small'
+                size="small"
                 onClick={() => textActions.setTextItalic(selectedObject)}
               >
                 <FormatItalicIcon />
@@ -123,13 +129,13 @@ export default function CurriculoPage() {
             </Tooltip>
 
             <Tooltip
-              placement='top'
+              placement="top"
               sx={{ fontSize: "1.2rem" }}
-              title='Sublinhado'
+              title="Sublinhado"
               arrow
             >
               <IconButton
-                size='small'
+                size="small"
                 onClick={() => textActions.setTextUnderlined(selectedObject)}
               >
                 <FormatUnderlinedIcon />
@@ -139,13 +145,13 @@ export default function CurriculoPage() {
 
           <Box>
             <Tooltip
-              placement='left'
+              placement="left"
               sx={{ fontSize: "1.2rem" }}
-              title='Alinha á esquerda'
+              title="Alinha á esquerda"
               arrow
             >
               <IconButton
-                size='small'
+                size="small"
                 onClick={() =>
                   textActions.setTextAlign({
                     align: "left",
@@ -158,13 +164,13 @@ export default function CurriculoPage() {
             </Tooltip>
 
             <Tooltip
-              placement='bottom-end'
+              placement="bottom-end"
               sx={{ fontSize: "1.2rem" }}
-              title='Alinha ao centro'
+              title="Alinha ao centro"
               arrow
             >
               <IconButton
-                size='small'
+                size="small"
                 onClick={() =>
                   textActions.setTextAlign({
                     align: "center",
@@ -177,13 +183,13 @@ export default function CurriculoPage() {
             </Tooltip>
 
             <Tooltip
-              placement='right'
+              placement="right"
               sx={{ fontSize: "1.2rem" }}
-              title='Alinha á direita'
+              title="Alinha á direita"
               arrow
             >
               <IconButton
-                size='small'
+                size="small"
                 onClick={() =>
                   textActions.setTextAlign({
                     align: "right",
@@ -197,18 +203,18 @@ export default function CurriculoPage() {
           </Box>
 
           <Box
-            display='flex'
-            alignItems='center'
-            justifyContent='space-between'
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
           >
-            <Tooltip sx={{ fontSize: "1.2rem" }} title='Título' arrow>
-              <IconButton size='small' onClick={() => textActions.addTitle()}>
+            <Tooltip sx={{ fontSize: "1.2rem" }} title="Título" arrow>
+              <IconButton size="small" onClick={() => textActions.addTitle()}>
                 <TitleIcon />
               </IconButton>
             </Tooltip>
 
             <IconButton
-              size='small'
+              size="small"
               onClick={() =>
                 textActions.setTextFontSize({
                   action: "-",
@@ -225,7 +231,7 @@ export default function CurriculoPage() {
               {format.fontSize}
             </Typography> */}
             <IconButton
-              size='small'
+              size="small"
               onClick={() =>
                 textActions.setTextFontSize({
                   action: "+",
