@@ -34,13 +34,13 @@ export default function CurriculoPage() {
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { textActions, selectedObject } = useFabric({ canvasEl });
+  const { canvas, textActions, selectedObject } = useFabric({ canvasEl });
 
-  // React.useEffect(() => {
-  //   if (canvas) {
-  //     document.querySelectorAll(".upper-canvas")[1]?.remove();
-  //   }
-  // }, [canvas]);
+  React.useEffect(() => {
+    if (canvas) {
+      document.querySelectorAll(".upper-canvas")[1]?.remove();
+    }
+  }, [canvas]);
 
   return (
     <Container maxWidth="md" component="section">

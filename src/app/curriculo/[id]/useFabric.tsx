@@ -32,7 +32,7 @@ const useFabric = ({ canvasEl }: Props) => {
       setSelectedObject(e.target);
     });
 
-    _canvas?.on("object:modified", (e: any) => {
+    _canvas?.on("object:added", (e: any) => {
       if (!e.target) return;
 
       setSelectedObject(e.target);
@@ -58,7 +58,9 @@ const useFabric = ({ canvasEl }: Props) => {
       fill: "#000000",
       fontSize: 20,
       selectable: true,
+      lockUniScaling: true,
       lockScalingY: true,
+      lockSkewingY: true,
     });
 
     canvas.add(text);
