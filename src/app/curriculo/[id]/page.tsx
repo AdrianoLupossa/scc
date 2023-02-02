@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -30,6 +29,7 @@ import SaveIcon from "@mui/icons-material/Save";
 
 import useFabric from "./useFabric";
 import Input from "@mui/material/Input";
+import { useTheme } from "@mui/material/styles";
 
 // TODO: Add a sidebar with all the actions separated by category (text, image, shape, etc).
 
@@ -38,15 +38,31 @@ export default function CurriculoPage() {
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { canvas, selectedTextProps, textActions, selectedObject } = useFabric({
+  const { selectedTextProps, textActions, selectedObject } = useFabric({
     canvasEl,
   });
 
-  React.useEffect(() => {
-    if (canvas) {
-      document.querySelectorAll(".upper-canvas")[1]?.remove();
-    }
-  }, [canvas]);
+  const [buttonSelected, setButtonSelected] = React.useState({
+    bold: false,
+    italic: false,
+    underline: false,
+    alignLeft: false,
+    alignCenter: false,
+    alignRight: false,
+  });
+
+  const theme = useTheme();
+
+  const selectedButtonStyle = {
+    backgroundColor: "lightblue",
+    color: theme.palette.primary.main,
+  };
+
+  // React.useEffect(() => {
+  //   if (canvas) {
+  //     document.querySelectorAll(".upper-canvas")[1]?.remove();
+  //   }
+  // }, [canvas]);
 
   return (
     <Container maxWidth="md" component="section">
@@ -100,6 +116,8 @@ export default function CurriculoPage() {
 
       <Draggable>
         <Box
+          id="tools"
+          className="formatting-tools"
           boxShadow="1px 2px 20px #ddd"
           bgcolor="white"
           p={3}
@@ -123,9 +141,17 @@ export default function CurriculoPage() {
             >
               <span>
                 <IconButton
+                  component={IconButton}
                   size="small"
                   disabled={!Boolean(selectedObject)}
-                  onClick={() => textActions.setTextBold(selectedObject)}
+                  onClick={() => {
+                    textActions.setTextBold(selectedObject);
+                    setButtonSelected({
+                      ...buttonSelected,
+                      bold: !buttonSelected.bold,
+                    });
+                  }}
+                  style={buttonSelected.bold ? selectedButtonStyle : {}}
                 >
                   <FormatBoldIcon />
                 </IconButton>
@@ -141,7 +167,14 @@ export default function CurriculoPage() {
                 <IconButton
                   size="small"
                   disabled={!Boolean(selectedObject)}
-                  onClick={() => textActions.setTextItalic(selectedObject)}
+                  onClick={() => {
+                    textActions.setTextItalic(selectedObject);
+                    setButtonSelected({
+                      ...buttonSelected,
+                      italic: !buttonSelected.italic,
+                    });
+                  }}
+                  style={buttonSelected.italic ? selectedButtonStyle : {}}
                 >
                   <FormatItalicIcon />
                 </IconButton>
@@ -158,7 +191,14 @@ export default function CurriculoPage() {
                 <IconButton
                   size="small"
                   disabled={!Boolean(selectedObject)}
-                  onClick={() => textActions.setTextUnderlined(selectedObject)}
+                  onClick={() => {
+                    textActions.setTextUnderlined(selectedObject);
+                    setButtonSelected({
+                      ...buttonSelected,
+                      underline: !buttonSelected.underline,
+                    });
+                  }}
+                  style={buttonSelected.underline ? selectedButtonStyle : {}}
                 >
                   <FormatUnderlinedIcon />
                 </IconButton>
@@ -177,12 +217,18 @@ export default function CurriculoPage() {
                 <IconButton
                   size="small"
                   disabled={!Boolean(selectedObject)}
-                  onClick={() =>
+                  style={buttonSelected.alignLeft ? selectedButtonStyle : {}}
+                  onClick={() => {
                     textActions.setTextAlign({
                       align: "left",
                       text: selectedObject,
-                    })
-                  }
+                    });
+
+                    setButtonSelected({
+                      ...buttonSelected,
+                      alignLeft: !buttonSelected.alignLeft,
+                    });
+                  }}
                 >
                   <FormatAlignLeftIcon />
                 </IconButton>
@@ -199,12 +245,18 @@ export default function CurriculoPage() {
                 <IconButton
                   size="small"
                   disabled={!Boolean(selectedObject)}
-                  onClick={() =>
+                  style={buttonSelected.alignCenter ? selectedButtonStyle : {}}
+                  onClick={() => {
                     textActions.setTextAlign({
                       align: "center",
                       text: selectedObject,
-                    })
-                  }
+                    });
+
+                    setButtonSelected({
+                      ...buttonSelected,
+                      alignCenter: !buttonSelected.alignCenter,
+                    });
+                  }}
                 >
                   <FormatAlignCenterIcon />
                 </IconButton>
@@ -221,12 +273,18 @@ export default function CurriculoPage() {
                 <IconButton
                   size="small"
                   disabled={!Boolean(selectedObject)}
-                  onClick={() =>
+                  style={buttonSelected.alignRight ? selectedButtonStyle : {}}
+                  onClick={() => {
                     textActions.setTextAlign({
                       align: "right",
                       text: selectedObject,
-                    })
-                  }
+                    });
+
+                    setButtonSelected({
+                      ...buttonSelected,
+                      alignRight: !buttonSelected.alignRight,
+                    });
+                  }}
                 >
                   <FormatAlignRightIcon />
                 </IconButton>

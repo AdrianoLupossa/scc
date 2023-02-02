@@ -7,6 +7,109 @@ type Props = {
 
 let Fabric: typeof fabric;
 
+// const UndoAndRedo = (canvas: fabric.Canvas) => {
+//   let current: any;
+//   let list: any[] = [];
+//   let state: any[] = [];
+//   let index = 0;
+//   let index2 = 0;
+//   let action = false;
+//   let refresh = true;
+//   if (!canvas) return {};
+
+//   canvas.on("object:added", function (e) {
+//     const object: any = e.target;
+//     console.log("object:modified");
+
+//     if (action) {
+//       state = [state[index2]];
+//       list = [list[index2]];
+
+//       action = false;
+//       console.log(state);
+//       index = 1;
+//     }
+//     object.saveState();
+
+//     console.log(object.originalState);
+//     state[index] = JSON.stringify(object.originalState);
+//     list[index] = object;
+//     index++;
+//     index2 = index - 1;
+
+//     refresh = true;
+//   });
+
+//   canvas.on("object:modified", function (e) {
+//     const object: any = e.target;
+//     console.log("object:modified");
+
+//     if (action === true) {
+//       state = [state[index2]];
+//       list = [list[index2]];
+
+//       action = false;
+//       console.log(state);
+//       index = 1;
+//     }
+
+//     object.saveState();
+
+//     state[index] = JSON.stringify(object.originalState);
+//     list[index] = object;
+//     index++;
+//     index2 = index - 1;
+
+//     console.log(state);
+//     refresh = true;
+//   });
+
+//   function undo() {
+//     if (index <= 0) {
+//       index = 0;
+//       return;
+//     }
+
+//     if (refresh === true) {
+//       index--;
+//       refresh = false;
+//     }
+
+//     console.log("undo");
+
+//     index2 = index - 1;
+//     current = list[index2];
+//     current.setOptions(JSON.parse(state[index2]));
+
+//     index--;
+//     current.setCoords();
+//     canvas.renderAll();
+//     action = true;
+//   }
+
+//   function redo() {
+//     action = true;
+//     if (index >= state.length - 1) {
+//       return;
+//     }
+
+//     console.log("redo");
+
+//     index2 = index + 1;
+//     current = list[index2];
+//     current.setOptions(JSON.parse(state[index2]));
+
+//     index++;
+//     current.setCoords();
+//     canvas.renderAll();
+//   }
+
+//   return {
+//     undo,
+//     redo,
+//   };
+// };
+
 const useFabric = ({ canvasEl }: Props) => {
   const [canvas, setCanvas] = React.useState<fabric.Canvas | undefined>();
   const [selectedTextProps, setSelectedTextProps] = React.useState<{
@@ -16,6 +119,8 @@ const useFabric = ({ canvasEl }: Props) => {
     fontWeight?: string;
     fontFamily?: string;
   }>();
+
+  const textPos = React.useRef(100);
 
   const [selectedObject, setSelectedObject] = React.useState<
     fabric.Object | undefined
@@ -54,13 +159,16 @@ const useFabric = ({ canvasEl }: Props) => {
   useEffect(() => {
     if (!canvas) return;
 
-    document.addEventListener("keydown", (e: any) => {
-      if (e.key === "Delete" && e.which === 46) {
+    document.addEventListener("keydown", (event: any) => {
+      if (!canvas.getActiveObject()) return;
+      if (event.key === "Delete" && event.which === 46) {
         if (!canvas) return;
 
         canvas.getActiveObjects().forEach((activeObject) => {
           canvas.remove(activeObject);
         });
+      } else if (event.keyCode == 90 && event.ctrlKey) {
+        console.log("Control Z");
       }
     });
   }, [canvas]);
@@ -69,8 +177,8 @@ const useFabric = ({ canvasEl }: Props) => {
     if (!canvas) return;
 
     const text = new Fabric.Textbox("Meu Titulo", {
-      left: 100,
-      top: 100,
+      left: textPos.current,
+      top: textPos.current,
       fontFamily: "helvetica",
       width: 120,
       angle: 0,
@@ -84,6 +192,7 @@ const useFabric = ({ canvasEl }: Props) => {
 
     canvas.add(text);
     canvas.setActiveObject(text);
+    textPos.current += 20;
     setSelectedTextProps({
       ...selectedTextProps,
       fontSize: 20,
@@ -107,6 +216,7 @@ const useFabric = ({ canvasEl }: Props) => {
     if (!(text instanceof Fabric.Textbox)) return;
     text.underline = text.underline ? false : true;
     canvas?.renderTop();
+    canvas?.renderAll();
   };
 
   const setTextAlign = ({
