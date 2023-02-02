@@ -81,15 +81,19 @@ export default function CurriculoPage() {
             title="Ver todos os meus currículos"
             arrow
           >
-            <IconButton aria-label="selector de arquivos">
-              <FolderOpenIcon />
-            </IconButton>
+            <span>
+              <IconButton aria-label="selector de arquivos">
+                <FolderOpenIcon />
+              </IconButton>
+            </span>
           </Tooltip>
 
           <Tooltip sx={{ fontSize: "1.2rem" }} title="Salvar alterações" arrow>
-            <IconButton disabled={!Boolean(selectedObject)}>
-              <SaveIcon />
-            </IconButton>
+            <span>
+              <IconButton disabled={!Boolean(selectedObject)}>
+                <SaveIcon />
+              </IconButton>
+            </span>
           </Tooltip>
         </Box>
       </Box>

@@ -51,6 +51,20 @@ const useFabric = ({ canvasEl }: Props) => {
     };
   }, [canvasEl]);
 
+  useEffect(() => {
+    if (!canvas) return;
+
+    document.addEventListener("keydown", (e: any) => {
+      if (e.key === "Delete" && e.which === 46) {
+        if (!canvas) return;
+
+        canvas.getActiveObjects().forEach((activeObject) => {
+          canvas.remove(activeObject);
+        });
+      }
+    });
+  }, [canvas]);
+
   const addTitle = () => {
     if (!canvas) return;
 
@@ -92,7 +106,7 @@ const useFabric = ({ canvasEl }: Props) => {
   const setTextUnderlined = (text?: fabric.Object) => {
     if (!(text instanceof Fabric.Textbox)) return;
     text.underline = text.underline ? false : true;
-    canvas?.requestRenderAll();
+    canvas?.renderTop();
   };
 
   const setTextAlign = ({
