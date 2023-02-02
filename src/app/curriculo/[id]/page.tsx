@@ -1,7 +1,10 @@
 "use client";
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { IconButton, Tooltip } from "@mui/material";
+
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -23,8 +26,8 @@ import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import TitleIcon from "@mui/icons-material/Title";
 import TextDecreaseIcon from "@mui/icons-material/TextDecrease";
 import TextIncreaseIcon from "@mui/icons-material/TextIncrease";
-
 import SaveIcon from "@mui/icons-material/Save";
+
 import useFabric from "./useFabric";
 
 // TODO: Add a sidebar with all the actions separated by category (text, image, shape, etc).
@@ -34,7 +37,9 @@ export default function CurriculoPage() {
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { canvas, textActions, selectedObject } = useFabric({ canvasEl });
+  const { canvas, textProps, textActions, selectedObject } = useFabric({
+    canvasEl,
+  });
 
   React.useEffect(() => {
     if (canvas) {
@@ -78,9 +83,12 @@ export default function CurriculoPage() {
               <FolderOpenIcon />
             </IconButton>
           </Tooltip>
-          <IconButton>
-            <SaveIcon />
-          </IconButton>
+
+          <Tooltip sx={{ fontSize: "1.2rem" }} title="Salvar alterações" arrow>
+            <IconButton disabled={!Boolean(selectedObject)}>
+              <SaveIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
 
@@ -109,6 +117,7 @@ export default function CurriculoPage() {
             >
               <IconButton
                 size="small"
+                disabled={!Boolean(selectedObject)}
                 onClick={() => textActions.setTextBold(selectedObject)}
               >
                 <FormatBoldIcon />
@@ -122,6 +131,7 @@ export default function CurriculoPage() {
             >
               <IconButton
                 size="small"
+                disabled={!Boolean(selectedObject)}
                 onClick={() => textActions.setTextItalic(selectedObject)}
               >
                 <FormatItalicIcon />
@@ -136,6 +146,7 @@ export default function CurriculoPage() {
             >
               <IconButton
                 size="small"
+                disabled={!Boolean(selectedObject)}
                 onClick={() => textActions.setTextUnderlined(selectedObject)}
               >
                 <FormatUnderlinedIcon />
@@ -152,6 +163,7 @@ export default function CurriculoPage() {
             >
               <IconButton
                 size="small"
+                disabled={!Boolean(selectedObject)}
                 onClick={() =>
                   textActions.setTextAlign({
                     align: "left",
@@ -171,6 +183,7 @@ export default function CurriculoPage() {
             >
               <IconButton
                 size="small"
+                disabled={!Boolean(selectedObject)}
                 onClick={() =>
                   textActions.setTextAlign({
                     align: "center",
@@ -190,6 +203,7 @@ export default function CurriculoPage() {
             >
               <IconButton
                 size="small"
+                disabled={!Boolean(selectedObject)}
                 onClick={() =>
                   textActions.setTextAlign({
                     align: "right",
@@ -215,6 +229,7 @@ export default function CurriculoPage() {
 
             <IconButton
               size="small"
+              disabled={!Boolean(selectedObject)}
               onClick={() =>
                 textActions.setTextFontSize({
                   action: "-",
@@ -225,12 +240,15 @@ export default function CurriculoPage() {
               <TextDecreaseIcon />
             </IconButton>
 
-            {/* <Typography
-              sx={{ border: "1px solid #ddd", borderRadius: 1, padding: 0.5 }}
-            >
-              {format.fontSize}
-            </Typography> */}
+            {textProps && (
+              <Typography
+                sx={{ border: "1px solid #ddd", borderRadius: 1, padding: 0.5 }}
+              >
+                {textProps?.fontSize}
+              </Typography>
+            )}
             <IconButton
+              disabled={!Boolean(selectedObject)}
               size="small"
               onClick={() =>
                 textActions.setTextFontSize({

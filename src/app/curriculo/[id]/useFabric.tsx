@@ -9,6 +9,12 @@ let Fabric: typeof fabric;
 
 const useFabric = ({ canvasEl }: Props) => {
   const [canvas, setCanvas] = React.useState<fabric.Canvas | undefined>();
+  const [textProps, setTextProps] = React.useState<{
+    fontSize?: number;
+    underline?: boolean;
+    fontStyle?: string;
+    fontWeight?: string;
+  }>();
 
   const [selectedObject, setSelectedObject] = React.useState<
     fabric.Object | undefined
@@ -34,7 +40,6 @@ const useFabric = ({ canvasEl }: Props) => {
 
     _canvas?.on("object:added", (e: any) => {
       if (!e.target) return;
-
       setSelectedObject(e.target);
     });
 
@@ -82,7 +87,7 @@ const useFabric = ({ canvasEl }: Props) => {
   const setTextUnderlined = (text?: fabric.Object) => {
     if (!(text instanceof Fabric.Textbox)) return;
     text.underline = text.underline ? false : true;
-    canvas?.renderAll();
+    canvas?.requestRenderAll();
   };
 
   const setTextAlign = ({
@@ -110,9 +115,17 @@ const useFabric = ({ canvasEl }: Props) => {
 
     if (action === "+") {
       text.fontSize = text.fontSize + 2;
+      setTextProps({
+        ...textProps,
+        fontSize: text.fontSize + 2,
+      });
     } else {
       if (text.fontSize <= 2) return;
       text.fontSize = text.fontSize - 2;
+      setTextProps({
+        ...textProps,
+        fontSize: text.fontSize - 2,
+      });
     }
 
     canvas?.renderAll();
@@ -129,6 +142,7 @@ const useFabric = ({ canvasEl }: Props) => {
 
   return {
     canvas,
+    textProps,
     textActions,
     selectedObject,
   };
