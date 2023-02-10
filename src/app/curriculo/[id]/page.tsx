@@ -26,10 +26,14 @@ import TitleIcon from "@mui/icons-material/Title";
 import TextDecreaseIcon from "@mui/icons-material/TextDecrease";
 import TextIncreaseIcon from "@mui/icons-material/TextIncrease";
 import SaveIcon from "@mui/icons-material/Save";
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import RectangleIcon from "@mui/icons-material/Crop32";
+import CircleIcon from "@mui/icons-material/PanoramaFishEye";
 
 import useFabric from "./useFabric";
 import Input from "@mui/material/Input";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
 
 // TODO: Add a sidebar with all the actions separated by category (text, image, shape, etc).
 
@@ -47,13 +51,22 @@ export default function CurriculoPage() {
 
   const canvasEl = React.useRef<HTMLCanvasElement | null>(null);
 
-  const { canvas, selectedTextProps, textActions, selectedObject } = useFabric({
-    canvasEl,
-  });
+  const draggableEl = React.useRef(null);
 
   const [buttonSelected, setButtonSelected] = React.useState(
     initialSelectionState
   );
+
+  const {
+    canvas,
+    selectedTextProps,
+    textActions,
+    canvasAction,
+    selectedObject,
+  } = useFabric({
+    canvasEl,
+    actions: { clearButtonSelection },
+  });
 
   const theme = useTheme();
 
@@ -87,6 +100,22 @@ export default function CurriculoPage() {
     });
   }, [canvas]);
 
+  React.useEffect(() => {
+    setButtonSelected((buttonSelected) => ({
+      ...buttonSelected,
+      bold: selectedTextProps?.fontWeight === "bold",
+      italic: selectedTextProps?.fontStyle === "italic",
+      underline: Boolean(selectedTextProps?.underline),
+      alignLeft: selectedTextProps?.textAlign === "left",
+      alignCenter: selectedTextProps?.textAlign === "center",
+      alignRight: selectedTextProps?.textAlign === "right",
+    }));
+  }, [selectedTextProps]);
+
+  function clearButtonSelection() {
+    setButtonSelected(initialSelectionState);
+  }
+
   return (
     <Container maxWidth="md" component="section">
       <Box
@@ -110,7 +139,6 @@ export default function CurriculoPage() {
             <span>
               <IconButton
                 onClick={() => window.print()}
-                disabled={!Boolean(selectedObject)}
                 aria-label="Baixar curriculo em PDF"
               >
                 <Download />
@@ -131,7 +159,7 @@ export default function CurriculoPage() {
 
           <Tooltip sx={{ fontSize: "1.2rem" }} title="Salvar alterações" arrow>
             <span>
-              <IconButton disabled={!Boolean(selectedObject)}>
+              <IconButton>
                 <SaveIcon />
               </IconButton>
             </span>
@@ -139,7 +167,7 @@ export default function CurriculoPage() {
         </Box>
       </Box>
 
-      <Draggable>
+      <Draggable ref={draggableEl}>
         <Box
           id="tools"
           className="formatting-tools"
@@ -168,7 +196,10 @@ export default function CurriculoPage() {
                 <IconButton
                   component={IconButton}
                   size="small"
-                  disabled={!Boolean(selectedObject)}
+                  disabled={
+                    !Boolean(selectedObject) ||
+                    !Boolean(selectedObject?.type === "textbox")
+                  }
                   onClick={() => {
                     textActions.setTextBold(selectedObject);
                     setButtonSelected({
@@ -191,7 +222,10 @@ export default function CurriculoPage() {
               <span>
                 <IconButton
                   size="small"
-                  disabled={!Boolean(selectedObject)}
+                  disabled={
+                    !Boolean(selectedObject) ||
+                    !Boolean(selectedObject?.type === "textbox")
+                  }
                   onClick={() => {
                     textActions.setTextItalic(selectedObject);
                     setButtonSelected({
@@ -215,7 +249,10 @@ export default function CurriculoPage() {
               <span>
                 <IconButton
                   size="small"
-                  disabled={!Boolean(selectedObject)}
+                  disabled={
+                    !Boolean(selectedObject) ||
+                    !Boolean(selectedObject?.type === "textbox")
+                  }
                   onClick={() => {
                     textActions.setTextUnderlined(selectedObject);
                     setButtonSelected({
@@ -241,7 +278,10 @@ export default function CurriculoPage() {
               <span>
                 <IconButton
                   size="small"
-                  disabled={!Boolean(selectedObject)}
+                  disabled={
+                    !Boolean(selectedObject) ||
+                    !Boolean(selectedObject?.type === "textbox")
+                  }
                   style={buttonSelected.alignLeft ? selectedButtonStyle : {}}
                   onClick={() => {
                     textActions.setTextAlign({
@@ -251,7 +291,7 @@ export default function CurriculoPage() {
 
                     setButtonSelected({
                       ...buttonSelected,
-                      alignLeft: !buttonSelected.alignLeft,
+                      alignLeft: true,
                       alignCenter: false,
                       alignRight: false,
                     });
@@ -271,7 +311,10 @@ export default function CurriculoPage() {
               <span>
                 <IconButton
                   size="small"
-                  disabled={!Boolean(selectedObject)}
+                  disabled={
+                    !Boolean(selectedObject) ||
+                    !Boolean(selectedObject?.type === "textbox")
+                  }
                   style={buttonSelected.alignCenter ? selectedButtonStyle : {}}
                   onClick={() => {
                     textActions.setTextAlign({
@@ -281,7 +324,7 @@ export default function CurriculoPage() {
 
                     setButtonSelected({
                       ...buttonSelected,
-                      alignCenter: !buttonSelected.alignCenter,
+                      alignCenter: true,
                       alignLeft: false,
                       alignRight: false,
                     });
@@ -301,7 +344,10 @@ export default function CurriculoPage() {
               <span>
                 <IconButton
                   size="small"
-                  disabled={!Boolean(selectedObject)}
+                  disabled={
+                    !Boolean(selectedObject) ||
+                    !Boolean(selectedObject?.type === "textbox")
+                  }
                   style={buttonSelected.alignRight ? selectedButtonStyle : {}}
                   onClick={() => {
                     textActions.setTextAlign({
@@ -311,7 +357,7 @@ export default function CurriculoPage() {
 
                     setButtonSelected({
                       ...buttonSelected,
-                      alignRight: !buttonSelected.alignRight,
+                      alignRight: true,
                       alignLeft: false,
                       alignCenter: false,
                     });
@@ -336,7 +382,10 @@ export default function CurriculoPage() {
 
             <IconButton
               size="small"
-              disabled={!Boolean(selectedObject)}
+              disabled={
+                !Boolean(selectedObject) ||
+                !Boolean(selectedObject?.type === "textbox")
+              }
               onClick={() =>
                 textActions.setTextFontSize({
                   action: "-",
@@ -347,29 +396,33 @@ export default function CurriculoPage() {
               <TextDecreaseIcon />
             </IconButton>
 
-            {selectedTextProps && (
-              <Input
-                sx={{
-                  border: "1px solid #ddd",
-                  borderRadius: 1,
-                  padding: 0,
-                  width: 30,
-                }}
-                inputProps={{
-                  style: {
-                    textAlign: "center",
-                  },
-                }}
-                onFocus={(e: any) => e.target.select}
-                type="text"
-                size="small"
-                readOnly
-                value={selectedTextProps.fontSize}
-              />
-            )}
+            {selectedTextProps &&
+              Boolean(selectedObject?.type === "textbox") && (
+                <Input
+                  sx={{
+                    border: "1px solid #ddd",
+                    borderRadius: 1,
+                    padding: 0,
+                    width: 30,
+                  }}
+                  inputProps={{
+                    style: {
+                      textAlign: "center",
+                    },
+                  }}
+                  onFocus={(e: any) => e.target.select}
+                  type="text"
+                  size="small"
+                  readOnly
+                  value={selectedTextProps.fontSize}
+                />
+              )}
 
             <IconButton
-              disabled={!Boolean(selectedObject)}
+              disabled={
+                !Boolean(selectedObject) ||
+                !Boolean(selectedObject?.type === "textbox")
+              }
               size="small"
               onClick={() =>
                 textActions.setTextFontSize({
@@ -381,14 +434,55 @@ export default function CurriculoPage() {
               <TextIncreaseIcon />
             </IconButton>
           </Box>
+
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <IconButton
+              size="small"
+              onClick={() => canvasAction.addShape("circle")}
+            >
+              <CircleIcon />
+            </IconButton>
+
+            <Tooltip sx={{ fontSize: "1.2rem" }} title="Linha" arrow>
+              <IconButton
+                size="small"
+                onClick={() => canvasAction.addShape("line")}
+              >
+                <HorizontalRuleIcon />
+              </IconButton>
+            </Tooltip>
+
+            <IconButton
+              size="small"
+              onClick={() => canvasAction.addShape("rect")}
+            >
+              <RectangleIcon />
+            </IconButton>
+          </Box>
         </Box>
       </Draggable>
 
       <Box gap={3} mt={3} pb={10}>
+        <Image
+          src="/assets/curriculum/curriculum-1.svg"
+          width={794}
+          height={1123}
+          alt="Curriculo-1"
+          style={{
+            position: "absolute",
+            maxWidth: "100%",
+          }}
+        />
         <canvas
           style={{
             border: "1px solid #eee",
             boxShadow: "0 1px 3px 1px rgb(60 64 67 / 15%)",
+            width: "704px",
+            height: "1123.33px",
           }}
           ref={canvasEl}
           width={794}
