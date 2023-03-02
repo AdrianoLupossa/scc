@@ -91,7 +91,7 @@ export default function CurriculoPage() {
       if (event.key === "Delete" && event.which === 46) {
         if (!canvas) return;
 
-        canvas.getActiveObjects().forEach((activeObject) => {
+        canvas.getActiveObjects().forEach((activeObject: any) => {
           canvas.remove(activeObject);
         });
 
@@ -187,7 +187,13 @@ export default function CurriculoPage() {
           zIndex={999}
           sx={{ cursor: "move" }}
         >
-          <Typography fontWeight="bold" fontSize={16} mb={2} gutterBottom>
+          <Typography
+            fontWeight="bold"
+            textAlign="left"
+            fontSize={20}
+            mb={2}
+            gutterBottom
+          >
             Toolbox
           </Typography>
           <Box>

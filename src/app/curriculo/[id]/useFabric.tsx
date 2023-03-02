@@ -12,8 +12,6 @@ type Props = {
 
 let Fabric: typeof fabric;
 
-type FabricType = typeof fabric;
-
 const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
   const [canvas, setCanvas] = React.useState<fabric.Canvas | undefined>();
 
@@ -37,9 +35,9 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
       imageSmoothingEnabled: true,
     });
 
-    _canvas.on("object:moving", (e) => {
-      preventObjectOverflowCanvas(e);
-    });
+    // _canvas.on("object:moving", (e) => {
+    //   preventObjectOverflowCanvas(e);
+    // });
 
     _canvas?.on("object:selected", (e: any) => {
       if (!e.target) return;
@@ -102,16 +100,52 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
       activeObject._restoreObjectsState();
       canvas.remove(activeObject);
       for (let i = 0; i < items.length; i++) {
-        // console.log({ obj: items[i], type: items[i].type });
-        let obj = items[i] as any;
+        console.log({ obj: items[i], type: items[i].type });
+        let obj = items[i] as fabric.Object;
+
+        const textObj = items[i] as fabric.Textbox;
 
         if (obj.type === "text") {
-          const textObj = items[i] as any;
           obj = new Fabric.Textbox(textObj?.text || "", {
             ...textObj,
             selectable: true,
             hasControls: true,
           });
+        }
+
+        if ("id" in obj && String(obj.id).includes(".image_placeholder")) {
+          const btnUpload = document.createElement("button") as any;
+          btnUpload.setAttribute(
+            "class",
+            "MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+          );
+
+          btnUpload.type = "button";
+          btnUpload.textContent = "Carregar";
+
+          const positionBtn = (obj: any) => {
+            const objCoords = obj.getBoundingRect(true);
+
+            btnUpload.style.left =
+              objCoords.left - btnUpload.style.width / 2 + "px";
+            btnUpload.style.top =
+              objCoords.top - btnUpload.style.height / 2 + "px";
+
+            // btnUpload.style.left = objCoords.left + 100 + "px";
+            // btnUpload.style.top = objCoords.top + 150 + "px";
+          };
+
+          positionBtn(obj);
+
+          document.querySelector(".canvas-container")?.append(btnUpload);
+
+          obj.lockRotation = true;
+          obj.lockScalingX = true;
+          obj.lockScalingY = true;
+          canvas
+            .add(obj)
+            .on("object:moving", () => positionBtn(obj))
+            .on("object:resizing", () => positionBtn(obj));
         }
 
         canvas.add(obj);
