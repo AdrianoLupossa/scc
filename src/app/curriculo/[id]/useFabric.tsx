@@ -1,5 +1,6 @@
 import fabric from "fabric/fabric-impl";
 import React, { useEffect } from "react";
+import { preventObjectOverflowCanvas } from "./fabricUtils";
 import useFabricText from "./useFabricText";
 
 type Props = {
@@ -11,171 +12,7 @@ type Props = {
 
 let Fabric: typeof fabric;
 
-// const UndoAndRedo = (canvas: fabric.Canvas) => {
-//   let current: any;
-//   let list: any[] = [];
-//   let state: any[] = [];
-//   let index = 0;
-//   let index2 = 0;
-//   let action = false;
-//   let refresh = true;
-//   if (!canvas) return {};
-
-//   canvas.on("object:added", function (e) {
-//     const object: any = e.target;
-//     console.log("object:modified");
-
-//     if (action) {
-//       state = [state[index2]];
-//       list = [list[index2]];
-
-//       action = false;
-//       console.log(state);
-//       index = 1;
-//     }
-//     object.saveState();
-
-//     console.log(object.originalState);
-//     state[index] = JSON.stringify(object.originalState);
-//     list[index] = object;
-//     index++;
-//     index2 = index - 1;
-
-//     refresh = true;
-//   });
-
-//   canvas.on("object:modified", function (e) {
-//     const object: any = e.target;
-//     console.log("object:modified");
-
-//     if (action === true) {
-//       state = [state[index2]];
-//       list = [list[index2]];
-
-//       action = false;
-//       console.log(state);
-//       index = 1;
-//     }
-
-//     object.saveState();
-
-//     state[index] = JSON.stringify(object.originalState);
-//     list[index] = object;
-//     index++;
-//     index2 = index - 1;
-
-//     console.log(state);
-//     refresh = true;
-//   });
-
-//   function undo() {
-//     if (index <= 0) {
-//       index = 0;
-//       return;
-//     }
-
-//     if (refresh === true) {
-//       index--;
-//       refresh = false;
-//     }
-
-//     console.log("undo");
-
-//     index2 = index - 1;
-//     current = list[index2];
-//     current.setOptions(JSON.parse(state[index2]));
-
-//     index--;
-//     current.setCoords();
-//     canvas.renderAll();
-//     action = true;
-//   }
-
-//   function redo() {
-//     action = true;
-//     if (index >= state.length - 1) {
-//       return;
-//     }
-
-//     console.log("redo");
-
-//     index2 = index + 1;
-//     current = list[index2];
-//     current.setOptions(JSON.parse(state[index2]));
-
-//     index++;
-//     current.setCoords();
-//     canvas.renderAll();
-//   }
-
-//   return {
-//     undo,
-//     redo,
-//   };
-// };
-
-const prevent = (e: fabric.IEvent<MouseEvent>) => {
-  var obj = e.target;
-  if (!obj || !obj.canvas) return;
-
-  obj.setCoords();
-  var curZoom = obj.canvas.getZoom();
-
-  // if object is too big ignore
-  if (
-    obj.getScaledHeight() > obj.canvas.getHeight() ||
-    obj.getScaledWidth() > obj.canvas.getWidth()
-  ) {
-    return;
-  }
-
-  // top-left  corner
-  if (obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0) {
-    obj.set(
-      "top",
-      Math.max(
-        obj.get("top")! * curZoom,
-        obj.get("top")! * curZoom - obj.getBoundingRect().top
-      ) / curZoom
-    );
-    obj.set(
-      "left",
-      Math.max(
-        obj.get("left")! * curZoom,
-        obj.get("left")! * curZoom - obj.getBoundingRect().left
-      ) / curZoom
-    );
-  }
-  // bot-right corner
-  if (
-    obj.getBoundingRect().top + obj.getBoundingRect().height >
-      obj.canvas.getHeight() ||
-    obj.getBoundingRect().left + obj.getBoundingRect().width >
-      obj.canvas.getWidth()
-  ) {
-    obj.set(
-      "top",
-      Math.min(
-        obj.get("top")! * curZoom,
-        obj.canvas.getHeight() -
-          obj.getBoundingRect().height +
-          obj.get("top")! * curZoom -
-          obj.getBoundingRect().top
-      ) / curZoom
-    );
-
-    obj.set(
-      "left",
-      Math.min(
-        obj.get("left")! * curZoom,
-        obj.canvas.getWidth() -
-          obj.getBoundingRect().width +
-          obj.get("left")! * curZoom -
-          obj.getBoundingRect().left
-      ) / curZoom
-    );
-  }
-};
+type FabricType = typeof fabric;
 
 const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
   const [canvas, setCanvas] = React.useState<fabric.Canvas | undefined>();
@@ -201,20 +38,7 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
     });
 
     _canvas.on("object:moving", (e) => {
-      prevent(e);
-      // if (!e.target) return;
-      // const obj = e.target;
-
-      // const isOnScreen = obj.isPartiallyOnScreen(true);
-
-      // if (!isOnScreen) {
-      //   // obj.centerH();
-      //   // obj.centerV();
-      //   obj.viewportCenterV();
-      //   obj.adjustPosition("center");
-      //   // obj.set("left", 250);
-      //   // obj.set("top", 400)
-      // }
+      preventObjectOverflowCanvas(e);
     });
 
     _canvas?.on("object:selected", (e: any) => {
@@ -232,6 +56,7 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
 
     _canvas?.on("mouse:down", (e: any) => {
       if (!e.target) return;
+
       setSelectedObject(e.target);
       setSelectedTextProps({
         ...selectedTextProps,
@@ -268,6 +93,36 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
     };
   }, [canvasEl]);
 
+  function ungroup(params?: { group: fabric.Group }) {
+    if (!canvas) return;
+    const activeObject = params?.group || canvas.getActiveObject();
+
+    if (activeObject && activeObject instanceof Fabric.Group) {
+      const items = activeObject._objects;
+      activeObject._restoreObjectsState();
+      canvas.remove(activeObject);
+      for (let i = 0; i < items.length; i++) {
+        // console.log({ obj: items[i], type: items[i].type });
+        let obj = items[i] as any;
+
+        if (obj.type === "text") {
+          const textObj = items[i] as any;
+          obj = new Fabric.Textbox(textObj?.text || "", {
+            ...textObj,
+            selectable: true,
+            hasControls: true,
+          });
+        }
+
+        canvas.add(obj);
+
+        obj.dirty = true; //set object dirty true
+      }
+
+      canvas.renderAll();
+    }
+  }
+
   const shapes = {
     line: () =>
       new Fabric.Line([50, 100, 200, 200], {
@@ -301,8 +156,32 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
       }),
   };
 
+  useEffect(() => {
+    if (!canvas) return;
+
+    Fabric.loadSVGFromURL(
+      "/assets/curriculum/curriculum-1.svg",
+      function (objects, options) {
+        options.group = false;
+
+        const svgData = Fabric.util.groupSVGElements(objects, options);
+        svgData.top = 30;
+        svgData.left = 50;
+
+        canvas.add(svgData);
+
+        if (svgData instanceof Fabric.Group) {
+          ungroup({ group: svgData });
+        }
+
+        canvas.renderAll();
+      }
+    );
+  }, [canvas]);
+
   const addShape = (shape: keyof typeof shapes) => {
     if (!canvas) return;
+
     canvas.add(shapes[shape]());
   };
 
@@ -321,6 +200,7 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
     textActions,
     canvasAction,
     selectedObject,
+    ungroup,
   };
 };
 

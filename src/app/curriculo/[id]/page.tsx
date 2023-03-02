@@ -34,6 +34,7 @@ import useFabric from "./useFabric";
 import Input from "@mui/material/Input";
 import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
+import { Typography } from "@mui/material";
 
 // TODO: Add a sidebar with all the actions separated by category (text, image, shape, etc).
 
@@ -63,6 +64,7 @@ export default function CurriculoPage() {
     textActions,
     canvasAction,
     selectedObject,
+    ungroup,
   } = useFabric({
     canvasEl,
     actions: { clearButtonSelection },
@@ -185,6 +187,9 @@ export default function CurriculoPage() {
           zIndex={999}
           sx={{ cursor: "move" }}
         >
+          <Typography fontWeight="bold" fontSize={16} mb={2} gutterBottom>
+            Toolbox
+          </Typography>
           <Box>
             <Tooltip
               placement="top"
@@ -379,7 +384,9 @@ export default function CurriculoPage() {
                 <TitleIcon />
               </IconButton>
             </Tooltip>
-
+            <Button variant="text" onClick={() => ungroup()}>
+              ungroup
+            </Button>
             <IconButton
               size="small"
               disabled={
@@ -467,16 +474,6 @@ export default function CurriculoPage() {
       </Draggable>
 
       <Box gap={3} mt={3} pb={10}>
-        <Image
-          src="/assets/curriculum/curriculum-1.svg"
-          width={794}
-          height={1123}
-          alt="Curriculo-1"
-          style={{
-            position: "absolute",
-            maxWidth: "100%",
-          }}
-        />
         <canvas
           style={{
             border: "1px solid #eee",
