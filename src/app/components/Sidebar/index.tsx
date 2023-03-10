@@ -42,34 +42,36 @@ export default function Sidebar({
       onKeyDown={toggleDrawer}
     >
       <List>
+        <Link
+          href={{
+            pathname: `/profile`,
+            query: { id: user?.uid },
+          }}
+        >
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={url?.includes("/profile")}
+              disabled={isLoading}
+            >
+              <ListItemIcon>
+                <AccountCircle />
+              </ListItemIcon>
+              <ListItemText primary="Perfil" />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+
         <ListItem disablePadding>
           <ListItemButton
-            selected={url?.includes("/profile")}
+            selected={url === "/"}
             disabled={isLoading}
+            LinkComponent={Link}
+            href="/"
           >
-            <ListItemIcon>
-              <AccountCircle />
-            </ListItemIcon>
-
-            <Link
-              href={{
-                pathname: `/profile`,
-                query: { id: user?.uid },
-              }}
-            >
-              <ListItemText primary="Perfil" />
-            </Link>
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton selected={url === "/"} disabled={isLoading}>
             <ListItemIcon>
               <FileCopy />
             </ListItemIcon>
-            <Link href="/">
-              <ListItemText primary="Curriculos" />
-            </Link>
+            <ListItemText primary="Curriculos" />
           </ListItemButton>
         </ListItem>
 
