@@ -49,7 +49,7 @@ export default function RootLayout({
         );
 
         if (isPublicRoute) {
-          push(links.profile.href);
+          push(links.home.href);
         }
 
         setInitialized(true);
