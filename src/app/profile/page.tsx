@@ -12,12 +12,13 @@ import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import { useTheme } from "@mui/material";
+import { IconButton, useTheme } from "@mui/material";
 
 import Download from "@mui/icons-material/Download";
 import EyePreview from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import ShareIcon from "@mui/icons-material/Share";
+import CameraIcon from "@mui/icons-material/CameraAlt";
 
 export default function Profile() {
   const theme = useTheme();
@@ -29,18 +30,43 @@ export default function Profile() {
       <Box
         width="100%"
         bgcolor="darkgray"
-        height={160}
+        height={180}
         padding={5}
-        zIndex={-1}
+        zIndex={1}
         position="relative"
         mb={20}
       >
+        <IconButton
+          type="button"
+          title="Alterar capa de destaque"
+          sx={{
+            cursor: "pointer",
+            position: "absolute",
+            top: 10,
+            right: 10,
+          }}
+        >
+          <CameraIcon />
+        </IconButton>
+
         <Box
           position="absolute"
           border={`2px solid ${theme.palette.primary.main}`}
           left={40}
           bottom={-80}
+          bgcolor="#fff"
         >
+          <IconButton
+            type="button"
+            title="Alterar foto de curriculo"
+            sx={{
+              cursor: "pointer",
+              position: "absolute",
+              bottom: 0,
+            }}
+          >
+            <CameraIcon />
+          </IconButton>
           <Image
             src={"/assets/brand/logotipo.png"}
             width={150}
@@ -122,10 +148,39 @@ export default function Profile() {
               @adrianolupossa (Github & Linkedin)
             </Typography>
 
-            <Typography fontWeight="bold">Experiência Profissional</Typography>
             <List>
+              <Typography fontWeight="bold">
+                Experiência Profissional
+              </Typography>
               <ListItem>
                 <ListItemText>Eadsoft/EadFast</ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText>Eadsoft/EadFast</ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText>Eadsoft/EadFast</ListItemText>
+              </ListItem>
+            </List>
+
+            <List>
+              <Typography fontWeight="bold">Educação</Typography>
+              <ListItem>
+                <ListItemText>Computer Science</ListItemText>
+              </ListItem>
+            </List>
+
+            <List>
+              <Typography fontWeight="bold">Idiomas</Typography>
+              <ListItem>
+                <ListItemText>Português (nativo)</ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemText>Inglês avançado</ListItemText>
+              </ListItem>
+
+              <ListItem>
+                <ListItemText>Espanhol básico</ListItemText>
               </ListItem>
             </List>
           </Grid>
@@ -167,7 +222,7 @@ export default function Profile() {
                   <Button
                     onClick={() => window.print()}
                     aria-label="Baixar curriculo em PDF"
-                    variant="text"
+                    variant="contained"
                     endIcon={<Download />}
                   >
                     Baixar
