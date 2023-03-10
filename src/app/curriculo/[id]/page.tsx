@@ -187,13 +187,7 @@ export default function CurriculoPage() {
           zIndex={999}
           sx={{ cursor: "move" }}
         >
-          <Typography
-            fontWeight="bold"
-            textAlign="left"
-            fontSize={20}
-            mb={2}
-            gutterBottom
-          >
+          <Typography fontWeight="bold" fontSize={20} mb={2} gutterBottom>
             Toolbox
           </Typography>
           <Box>

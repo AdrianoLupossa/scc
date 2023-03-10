@@ -49,7 +49,7 @@ export default function RootLayout({
         );
 
         if (isPublicRoute) {
-          push(links.home.href);
+          push(links.profile.href);
         }
 
         setInitialized(true);
@@ -63,11 +63,11 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang='pt' className={roboto.className}>
+    <html lang="pt" className={roboto.className}>
       <head />
       <body>
         {!deferredInitialized ? (
-          <SpinLoad fallback='Autenticando...' fullScreen={true} />
+          <SpinLoad fallback="Autenticando..." fullScreen={true} />
         ) : (
           <>
             {!path?.includes("login") && !path?.includes("signup") && (
@@ -77,7 +77,7 @@ export default function RootLayout({
           </>
         )}
         <Script
-          src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js'
+          src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"
           // integrity='sha512-CeIsOAsgJnmevfCi2C7Zsyy6bQKi43utIjdA87Q0ZY84oDqnI0uwfM9+bKiIkI75lUeI00WG/+uJzOmuHlesMA=='
           // crossOrigin='anonymous'
           // referrerPolicy='no-referrer'

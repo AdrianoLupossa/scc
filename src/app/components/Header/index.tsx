@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { styled, alpha } from "@mui/material/styles";
 import useAuthStore from "@/app/auth/store";
 import { useRouter } from "next/navigation";
@@ -101,13 +102,17 @@ export default function Header() {
             <MenuIcon />
           </IconButton>
           <Sidebar openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, marginRight: 2 }}
+            sx={{ flexGrow: 1, marginRight: 2, cursor: "pointer" }}
           >
-            SCC
+            <Link href="/" title="Voltar para o Inicio">
+              SCC
+            </Link>
           </Typography>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

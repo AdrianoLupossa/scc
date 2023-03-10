@@ -1,4 +1,7 @@
 import * as React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -22,12 +25,14 @@ export default function Sidebar({
   openDrawer: boolean;
   setOpenDrawer: (openDrawer: boolean) => void;
 }) {
-  const { setUser } = useAuthStore();
+  const { setUser, user } = useAuthStore();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
+
+  const url = usePathname();
 
   const items = () => (
     <Box
@@ -38,20 +43,33 @@ export default function Sidebar({
     >
       <List>
         <ListItem disablePadding>
-          <ListItemButton disabled={isLoading}>
+          <ListItemButton
+            selected={url?.includes("/profile")}
+            disabled={isLoading}
+          >
             <ListItemIcon>
               <AccountCircle />
             </ListItemIcon>
-            <ListItemText primary="Perfil" />
+
+            <Link
+              href={{
+                pathname: `/profile`,
+                query: { id: user?.uid },
+              }}
+            >
+              <ListItemText primary="Perfil" />
+            </Link>
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton disabled={isLoading}>
+          <ListItemButton selected={url === "/"} disabled={isLoading}>
             <ListItemIcon>
               <FileCopy />
             </ListItemIcon>
-            <ListItemText primary="Curriculos" />
+            <Link href="/">
+              <ListItemText primary="Curriculos" />
+            </Link>
           </ListItemButton>
         </ListItem>
 

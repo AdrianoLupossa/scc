@@ -100,7 +100,7 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
       activeObject._restoreObjectsState();
       canvas.remove(activeObject);
       for (let i = 0; i < items.length; i++) {
-        console.log({ obj: items[i], type: items[i].type });
+        // console.log({ obj: items[i], type: items[i].type });
         let obj = items[i] as fabric.Object;
 
         const textObj = items[i] as fabric.Textbox;
@@ -114,6 +114,7 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
         }
 
         if ("id" in obj && String(obj.id).includes(".image_placeholder")) {
+          console.log(obj);
           const btnUpload = document.createElement("button") as any;
           btnUpload.setAttribute(
             "class",
@@ -142,6 +143,9 @@ const useFabric = ({ canvasEl, objectAdded, mouseDown, actions }: Props) => {
           obj.lockRotation = true;
           obj.lockScalingX = true;
           obj.lockScalingY = true;
+
+          // fabric.Image.fromURL(obj.to)
+
           canvas
             .add(obj)
             .on("object:moving", () => positionBtn(obj))
